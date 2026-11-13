@@ -6,3 +6,6 @@ modelos-3dgob/
 *.STL
 *.3mf
 *.3MF
+
+# Fotos de Ziggys (colaboración): solo en local hasta decidir dónde se usan; el repo es público
+public/assets/img/ziggys/
