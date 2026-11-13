@@ -1,2 +1,8 @@
 node_modules/
 dist/
+# Originales de 3DGOB: son de pago, NO se suben (el repo es público)
+modelos-3dgob/
+*.stl
+*.STL
+*.3mf
+*.3MF

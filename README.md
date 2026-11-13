@@ -29,10 +29,20 @@ maqueta/               Primera maqueta (referencia)
 npm install          # una vez
 npm run dev          # construye y sirve en http://localhost:4321
 npm run build        # solo construye dist/
-npm run modelo       # regenera public/modelos/flopi.glb
+npm run modelo       # regenera public/modelos/flopi.glb (muñeco provisional)
+npm run convertir -- modelos-3dgob/dino.3mf dino --color "#9ED9C0"   # STL/3MF → public/modelos/dino.glb
 ```
 
 Cada push a `main` publica la web automáticamente (`.github/workflows/pages.yml`).
+
+## Modelos de 3DGOB
+
+Los diseños se consiguen con el Patreon de 3DGOB (https://www.patreon.com/3DGOB), que incluye licencia comercial, o en su tienda de MyMiniFactory.
+
+- Guarda los originales (STL/3MF) en `modelos-3dgob/`: esa carpeta y cualquier `.stl`/`.3mf` están en `.gitignore` porque son de pago y este repo es público.
+- `npm run convertir -- <archivo> <slug>` genera `public/modelos/<slug>.glb` optimizado (≤ 2 MB), centrado, en metros y con un material por pieza: la mayor se llama `Cuerpo` (la que cambia de color en la ficha).
+- Antes de publicar un GLB, confirma que la licencia permite mostrar el modelo 3D en la web; si no, usa solo fotos o renders.
+- Son figuras flexi articuladas con piezas pequeñas: no aptas para menores de 3 años.
 
 ## Pendiente
 
