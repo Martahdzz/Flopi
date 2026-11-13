@@ -66,15 +66,7 @@
           <span class="hero__linea"><span>muñeco.</span></span>
         </h1>
         <p class="hero__lead">Diseñamos e imprimimos en 3D un muñeco con su nombre, sus colores y su gorro favorito.</p>
-        <div class="hero__acciones">
-          <a class="boton hero__cta" href="munecos.html">Crea tu Flopi</a>
-          <a class="enlace hero__cta" href="#pandilla">Conoce a la pandilla</a>
-        </div>
-        <ul class="hero__datos hero__cta">
-          <li>Desde 29,90 € con IVA</li>
-          <li>Llega en 7–10 días</li>
-          <li>Hecho en España</li>
-        </ul>
+        {{OFERTA}}
       </div>
       <div class="hero__flopi">
         <svg viewBox="-20 -20 280 320" role="img" aria-label="Flopi, un muñeco redondito con gorro de colores" style="--c-cuerpo:var(--cielo);--c-pelo:var(--tinta);--c-extra:var(--chicle);--c-peana:var(--tinta)">
@@ -104,36 +96,7 @@
     </div>
   </section>
 
-  <section class="capas" id="capas" data-fondo="menta" aria-labelledby="titulo-capas">
-    <div class="capas__pin">
-      <div class="envoltorio">
-        <div class="capas__texto">
-          <h2 id="titulo-capas">Así nace un Flopi</h2>
-          <ol class="pasos">
-            <li class="paso"><h3>Eliges cómo es</h3><p>Color, nombre y un accesorio.</p></li>
-            <li class="paso"><h3>Lo imprimimos capa a capa</h3><p>Una impresora 3D lo levanta en capas de 0,2 mm.</p></li>
-            <li class="paso"><h3>Lo repasamos a mano</h3><p>Lijamos, revisamos cada pieza y lo pintamos.</p></li>
-            <li class="paso"><h3>Llega a casa</h3><p>En una caja lista para regalar.</p></li>
-          </ol>
-          <p class="capas__medida">Unas 900 capas por muñeco de 18 cm.</p>
-        </div>
-        <div class="capas__escenario" aria-hidden="true">
-          <svg class="capas__fantasma" viewBox="-20 -20 280 320">
-            <g fill="none" stroke="var(--tinta)" stroke-width="2.5" stroke-dasharray="6 7" filter="url(#mano)">
-              <circle cx="120" cy="98" r="72"/>
-              <path d="M58 260 C50 196 72 150 120 150 C168 150 190 196 182 260 Z"/>
-              <rect x="44" y="256" width="152" height="30" rx="15"/>
-              <path d="M56 58 Q120 -10 184 58"/>
-            </g>
-          </svg>
-          <svg class="capas__flopi" viewBox="-20 -20 280 320" style="--c-cuerpo:var(--chicle);--c-pelo:var(--tinta);--c-extra:var(--cielo);--c-peana:var(--tinta)">
-            <use width="240" height="300" href="#flopi"/><use width="240" height="300" href="#extra-gorro"/>
-          </svg>
-          <div class="capas__boquilla"></div>
-        </div>
-      </div>
-    </div>
-  </section>
+  {{DESTACADOS}}
 
   <section class="pandilla" id="pandilla" data-fondo="papel" aria-labelledby="titulo-pandilla">
     <div class="envoltorio">
@@ -147,12 +110,41 @@
     </div>
   </section>
 
-  <section class="frase" data-fondo="chicle" aria-label="Lema">
+  {{HUEVOS}}
+
+  {{PACK}}
+
+  <section class="club" data-fondo="chicle" aria-labelledby="titulo-club">
     <div class="envoltorio">
-      <h2><span>Cada Flopi</span><span>es único,</span><span>como su dueño.</span></h2>
-      <svg class="frase__firma" viewBox="0 0 400 40" aria-hidden="true"><path pathLength="1" d="M5 24 Q60 6 120 22 T240 20 T395 14" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" filter="url(#mano)"/></svg>
+      <div class="club__texto">
+        <h2 id="titulo-club">Club Flopi</h2>
+        <p>Apúntate con tu correo y te escribimos de vez en cuando, sin llenarte la bandeja.</p>
+      </div>
+      <ul class="club__ventajas">
+        <li><strong>Personajes nuevos</strong><span>Te avisamos antes que a nadie cuando llega uno a la pandilla.</span></li>
+        <li><strong>Su cumpleaños</strong><span>Un pequeño regalo para el peque cuando cumpla años.</span></li>
+        <li><strong>Solo para socios</strong><span>Descuentos que no verás en la web.</span></li>
+      </ul>
+      <form class="club__form" id="club-form" novalidate>
+        <label for="club-email">Tu correo</label>
+        <input type="email" id="club-email" name="email" autocomplete="email" required>
+        <button type="submit" class="boton">Apuntarme</button>
+        <p id="club-aviso" class="club__aviso" role="status" aria-live="polite"></p>
+      </form>
     </div>
   </section>
+
+  <section class="confianza" data-fondo="papel" aria-label="Por qué Flopi">
+    <div class="envoltorio">
+      <ul class="confianza__lista">
+        <li><svg viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="16" cy="11" r="6"/><path d="M6 28c1.5-6 5.5-9 10-9s8.5 3 10 9"/><path d="M24 5l2 2 4-4"/></svg><span>Eliges personaje a personaje</span></li>
+        <li><svg viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="18" width="24" height="9" rx="4.5"/><path d="M10 22.5h12"/><path d="M16 4c-4 0-6 3-6 6s2 5 6 8c4-3 6-5 6-8s-2-6-6-6z"/></svg><span>Con su nombre en la peana</span></li>
+        <li><svg viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 27h22"/><path d="M8 27V13l8-6 8 6v14"/><path d="M13 27v-7h6v7"/></svg><span>Hecho en nuestro taller</span></li>
+      </ul>
+    </div>
+  </section>
+
+  {{DESCUENTOS}}
 
   <section class="taller" id="taller" data-fondo="limon" aria-labelledby="titulo-taller">
     <div class="envoltorio">
@@ -198,15 +190,51 @@
     </div>
   </section>
 
-  <section class="padres" id="padres" data-fondo="papel" aria-labelledby="titulo-padres">
+  <section class="frase" data-fondo="chicle" aria-label="Lema">
     <div class="envoltorio">
-      <h2 id="titulo-padres">Lo que preguntan los padres</h2>
-      <dl class="respuestas">
-        <div class="respuesta"><dt>¿Para qué edad es?</dt><dd>Recomendado a partir de 3 años: tiene piezas pequeñas. <span class="por-confirmar">por confirmar</span></dd></div>
-        <div class="respuesta"><dt>¿De qué está hecho?</dt><dd>Plástico PLA de origen vegetal y pintura al agua. <span class="por-confirmar">por confirmar</span></dd></div>
-        <div class="respuesta"><dt>¿Cuándo llega?</dt><dd>Lo fabricamos en 5 días laborables y el envío tarda 48 h en península.</dd></div>
-        <div class="respuesta"><dt>¿Y si no nos gusta?</dt><dd>Como lleva su nombre, no se puede devolver por desistimiento. Si llega roto o con un defecto, lo reponemos gratis.</dd></div>
-        <div class="respuesta"><dt>¿El pago es seguro?</dt><dd>Pagas con tarjeta, Bizum o Apple Pay en una pasarela cifrada. No guardamos tus datos de pago.</dd></div>
-      </dl>
+      <h2><span>Cada Flopi</span><span>es único,</span><span>como su dueño.</span></h2>
+      <svg class="frase__firma" viewBox="0 0 400 40" aria-hidden="true"><path pathLength="1" d="M5 24 Q60 6 120 22 T240 20 T395 14" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" filter="url(#mano)"/></svg>
+    </div>
+  </section>
+
+  <section class="cuaderno" data-fondo="cielo" aria-labelledby="titulo-cuaderno">
+    <div class="envoltorio">
+      <div class="cuaderno__texto">
+        <h2 id="titulo-cuaderno">Para colorear en familia</h2>
+        <p>Un cuaderno imprimible con la pandilla Flopi para dibujar y jugar sin pantallas.</p>
+        <span class="por-confirmar">Próximamente</span>
+      </div>
+      <div class="cuaderno__dibujo" aria-hidden="true">
+        <svg viewBox="-20 -30 280 330" width="280" height="330" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M86 40 L90 6 L106 26 L120 0 L134 26 L150 6 L154 40"/>
+          <circle cx="120" cy="98" r="72"/>
+          <path d="M62 78 C70 30 120 14 160 34 C176 42 186 58 186 74 C168 58 150 54 132 62 C120 44 92 46 62 78 Z"/>
+          <ellipse cx="94" cy="104" rx="13" ry="15"/><ellipse cx="146" cy="104" rx="13" ry="15"/>
+          <circle cx="95" cy="107" r="4"/><circle cx="147" cy="107" r="4"/>
+          <path d="M108 132 Q120 144 132 132"/>
+          <path d="M58 260 C50 196 72 150 120 150 C168 150 190 196 182 260"/>
+          <ellipse cx="58" cy="208" rx="15" ry="27" transform="rotate(18 58 208)"/>
+          <ellipse cx="182" cy="208" rx="15" ry="27" transform="rotate(-18 182 208)"/>
+          <ellipse cx="120" cy="214" rx="30" ry="26" stroke-dasharray="5 8"/>
+          <rect x="44" y="256" width="152" height="30" rx="15"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="resenas" data-fondo="papel" aria-labelledby="titulo-resenas">
+    <div class="envoltorio">
+      <h2 id="titulo-resenas">Lo que dicen las familias</h2>
+      <div class="resenas__vacio"><p>Aquí irán las reseñas reales de quienes compren. No ponemos opiniones inventadas.</p></div>
+    </div>
+  </section>
+
+  {{FAQ}}
+
+  <section class="final" data-fondo="cielo" aria-labelledby="titulo-final">
+    <div class="envoltorio">
+      <h2 id="titulo-final">Lo difícil será elegir solo uno</h2>
+      <p>Elige personaje, ponle su nombre y nosotros nos encargamos del resto.</p>
+      <a class="boton" href="munecos.html">Crea tu Flopi</a>
     </div>
   </section>

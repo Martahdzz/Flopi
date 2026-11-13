@@ -37,13 +37,101 @@ const paginas = [];
 const registrar = (archivo, html) => { paginas.push(archivo); return escribir(archivo, html); };
 
 // ---- Inicio ----
-const inicio = (await readFile(new URL("src/paginas/inicio.html", raiz), "utf8"))
-  .replace("{{PANDILLA}}", productos.map((p, i) => tarjeta(p, datos, i)).join("\n"));
+// Sección y página de huevos sorpresa: las genera otro módulo; si no existe, se omiten.
+let seccionHuevos = () => "";
+let paginaHuevos = null;
+try { ({ seccionHuevos = () => "", paginaHuevos = null } = await import("../src/paginas/huevos.mjs")); } catch {}
+
+const porSlug = Object.fromEntries(productos.map((p) => [p.slug, p]));
+const { pack, descuentos = [], faq = [], destacados = [] } = datos;
+const sumaSuelta = productos.reduce((t, p) => t + p.precio, 0);
+const ahorro = sumaSuelta - pack.precio;
+const precioPack = `<s>${euros(sumaSuelta)}</s> <strong>${euros(pack.precio)}</strong> <span class="oferta__ahorro">Ahorras ${euros(ahorro)}</span>`;
+
+const OFERTA = `<div class="oferta hero__cta">
+          <p class="oferta__titulo">${esc(pack.nombre)}</p>
+          <p class="oferta__precio">${precioPack}</p>
+          <div class="oferta__acciones"><a class="boton" href="#pack">Ver el pack</a><a class="enlace" href="munecos.html">Elegir por separado</a></div>
+          <p class="oferta__nota">Cada Flopi lleva el nombre que elijas. Precios de ejemplo.</p>
+        </div>`;
+
+const DESTACADOS = `<section class="destacados" data-fondo="papel" aria-labelledby="titulo-destacados">
+    <div class="envoltorio">
+      <div class="destacados__cabeza"><h2 id="titulo-destacados">Tres para empezar</h2><p>Los que más ganas tenemos de ver en casa. Todos cambian de color y llevan su nombre.</p></div>
+      <div class="destacados__fila">
+${destacados.map((slug) => porSlug[slug]).filter(Boolean).map((p) => `        <a class="destacado" href="flopi-${p.slug}.html">
+          <div class="destacado__marco" style="--fondo-tarjeta:var(--${p.fondo})"><img src="assets/img/flopi-${p.slug}.svg" alt="${esc(p.nombre)}, muñeco Flopi con ${esc(accesorios[p.accesorio].nombre.toLowerCase())}" width="560" height="660" loading="lazy" decoding="async"></div>
+          <div class="destacado__texto"><h3>${esc(p.nombre)}</h3><p>${esc(p.frase)}</p><span class="destacado__precio">${euros(p.precio)}</span></div>
+        </a>`).join("\n")}
+      </div>
+    </div>
+  </section>`;
+
+const PACK = `<section class="pack" id="pack" data-fondo="limon" aria-labelledby="titulo-pack">
+    <div class="envoltorio">
+      <div class="pack__composicion" aria-hidden="true">
+${productos.slice(0, 5).map((p, i) => `        <img class="pack__flopi" style="--i:${i}" src="assets/img/flopi-${p.slug}.svg" alt="" width="560" height="660" loading="lazy" decoding="async">`).join("\n")}
+      </div>
+      <div class="pack__texto">
+        <h2 id="titulo-pack">La pandilla completa</h2>
+        <p>${esc(pack.descripcion)}</p>
+        <p class="pack__precio">${precioPack}</p>
+        <a class="boton" href="munecos.html">Elegir sus nombres</a>
+      </div>
+      <div class="pack__escenario">
+        <h3>${esc(pack.escenario.nombre)}</h3>
+        <p>${esc(pack.escenario.descripcion)}</p>
+        <span class="pack__escenario-precio">${euros(pack.escenario.precio)}</span>
+      </div>
+    </div>
+  </section>`;
+
+const DESCUENTOS = `<section class="descuentos" data-fondo="menta" aria-labelledby="titulo-descuentos">
+    <div class="envoltorio">
+      <div class="descuentos__texto"><h2 id="titulo-descuentos">Cuantos más, mejor</h2><p>Para hermanos, primos o toda la clase: el descuento se aplica solo en el carrito.</p></div>
+      <ol class="descuentos__lista">
+${descuentos.map((d) => `        <li class="descuento"><span class="descuento__unidades">Desde ${d.unidades} Flopis</span><span class="descuento__valor">${d.descuento} %</span></li>`).join("\n")}
+      </ol>
+      <p class="descuentos__nota">Descuentos de ejemplo. El pack pandilla tiene su propio precio.</p>
+    </div>
+  </section>`;
+
+const FAQ = `<section class="faq" id="faq" data-fondo="papel" aria-labelledby="titulo-faq">
+    <div class="envoltorio">
+      <h2 id="titulo-faq">Antes de elegir</h2>
+      <div class="faq__lista">
+${faq.map(([q, r]) => `        <details class="faq__item"><summary>${esc(q)}</summary><div class="faq__respuesta"><p>${esc(r)}</p></div></details>`).join("\n")}
+      </div>
+    </div>
+  </section>`;
+
+const faqLD = {
+  "@context": "https://schema.org", "@type": "FAQPage",
+  mainEntity: faq.map(([q, r]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: r } })),
+};
+
+const huevosHTML = (() => { try { return seccionHuevos(datos) || ""; } catch (e) { console.warn("huevos.mjs: seccionHuevos falló:", e.message); return ""; } })();
+const piezas = {
+  "{{OFERTA}}": OFERTA, "{{DESTACADOS}}": DESTACADOS, "{{PANDILLA}}": productos.map((p, i) => tarjeta(p, datos, i)).join("\n"),
+  "{{HUEVOS}}": huevosHTML, "{{PACK}}": PACK, "{{DESCUENTOS}}": DESCUENTOS, "{{FAQ}}": FAQ,
+};
+let inicio = await readFile(new URL("src/paginas/inicio.html", raiz), "utf8");
+for (const [k, v] of Object.entries(piezas)) inicio = inicio.replace(k, () => v);
 await registrar("index.html", pagina({
   titulo: "Flopi, muñecos impresos en 3D con su nombre",
   descripcion: "Diseñamos e imprimimos en 3D un muñeco con el nombre, los colores y el accesorio que elijas.",
+  cabezaExtra: `<script type="application/ld+json">${JSON.stringify(faqLD).replace(/</g, "\\u003c")}</script>`,
   cuerpo: inicio,
 }));
+
+if (typeof paginaHuevos === "function") {
+  await registrar("huevos.html", pagina({
+    titulo: "Huevos sorpresa Flopi",
+    descripcion: "Abre un huevo sorpresa y descubre qué Flopi sale de dentro. Después le pones su nombre.",
+    activo: "huevos",
+    cuerpo: paginaHuevos(datos),
+  }));
+}
 
 // ---- Catálogo ----
 await registrar("munecos.html", pagina({

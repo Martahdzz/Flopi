@@ -6,7 +6,7 @@ const ICONO_CARRITO = `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" s
 
 const MENU = [
   ["munecos.html", "Muñecos", "munecos"],
-  ["index.html#capas", "Cómo se hace", "capas"],
+  ["index.html#huevos", "Huevos sorpresa", "huevos"],
   ["seguridad.html", "Seguridad", "seguridad"],
   ["envios.html", "Envíos", "envios"],
 ];
@@ -30,11 +30,13 @@ export function pagina({ titulo, descripcion, activo = "", fondo = "papel", cuer
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Nunito:wght@400;600;800&display=swap">
 <link rel="stylesheet" href="assets/css/flopi.css">
+<link rel="stylesheet" href="assets/css/huevos.css">
 <script>try{var p=localStorage.getItem("flopi-paleta");if(p)document.documentElement.dataset.paleta=p}catch(e){}</script>
 ${cabezaExtra}
 </head>
 <body data-fondo="${fondo}">
 <a class="saltar" href="#contenido">Saltar al contenido</a>
+<div class="anuncio"><div class="envoltorio"><p>Nuevos huevos sorpresa: ¿quién saldrá del tuyo? <a href="index.html#huevos">Descubrirlos</a></p></div></div>
 ${sinCabecera ? "" : `<header class="cabecera">
   <div class="envoltorio">
     <a class="marca" href="index.html" aria-label="Flopi, inicio">
@@ -55,6 +57,7 @@ ${cuerpo}
     <div class="pie__fila">
       <ul>
         <li><a href="munecos.html">Muñecos</a></li>
+        <li><a href="index.html#huevos">Huevos sorpresa</a></li>
         <li><a href="seguridad.html">Seguridad y materiales</a></li>
         <li><a href="envios.html">Envíos y devoluciones</a></li>
         <li><a href="aviso-legal.html">Aviso legal</a></li>
@@ -75,6 +78,7 @@ ${cuerpo}
 <script src="assets/vendor/lenis.min.js" defer></script>
 <script src="assets/js/carrito.js" defer></script>
 <script src="assets/js/flopi.js" defer></script>
+<script src="assets/js/huevos.js" defer></script>
 ${scripts.map((s) => `<script src="${s}" defer></script>`).join("\n")}
 </body>
 </html>
@@ -87,6 +91,6 @@ export function tarjeta(p, datos, i = 0) {
     <img src="assets/img/flopi-${p.slug}.svg" alt="${esc(p.nombre)}, muñeco Flopi ${datos.colores[p.cuerpo].nombre.toLowerCase()} con ${datos.accesorios[p.accesorio].nombre.toLowerCase()}" width="560" height="660" loading="lazy" decoding="async" style="view-transition-name:flopi-${p.slug}">
   </div>
   <div class="tarjeta__pie"><span class="tarjeta__nombre">${esc(p.nombre)}</span><span class="tarjeta__precio">${euros(p.precio)}</span></div>
-  <span class="tarjeta__frase">${esc(p.frase)}</span>
+  <span class="tarjeta__subtitulo">${esc(p.subtitulo)}</span>
 </a>`;
 }
