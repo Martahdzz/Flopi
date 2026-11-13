@@ -1,0 +1,135 @@
+/* Huevos sorpresa. Usa solo los tokens de flopi.css.
+   Momento firma: el huevo se balancea, al pulsarlo salta la mitad de arriba y sale un mini Flopi con rebote.
+   disparador: clic/tecla en el huevo · 0,7 s · mitad de arriba (salta y gira) + Flopi (squash & stretch)
+   móvil: igual, sin hover · reduced-motion: sin balanceo ni saltos; la mitad se desvanece y el Flopi aparece con fundido. */
+
+/* ---------- Pieza común: el huevo con su Flopi dentro ---------- */
+.huevo__caja{ position:relative; display:block; aspect-ratio:200 / 252; transform-origin:50% 96%; }
+.huevo__svg{ position:absolute; inset:0; z-index:1; width:100%; height:100%; display:block; overflow:visible; }
+.huevo__flopi{ position:absolute; z-index:0; left:12%; width:76%; bottom:27%; opacity:0; transform-origin:50% 100%;
+  transition:opacity .3s var(--ease-salida); pointer-events:none; }
+.huevo__flopi svg{ display:block; width:100%; height:auto; overflow:visible; }
+.huevo__arriba{ transform-box:fill-box; transform-origin:50% 100%; transition:transform .45s var(--ease-salida), opacity .3s var(--ease-salida); }
+.huevo__caja--abierta .huevo__arriba{ display:none; }
+.huevo__caja--abierta .huevo__flopi{ opacity:1; }
+
+/* ---------- Sección de portada ---------- */
+.huevos{ padding-block:clamp(72px, 11vw, 150px); }
+.huevos .envoltorio{ display:grid; grid-template-columns:repeat(12, minmax(0,1fr)); gap:var(--gap); align-items:end; }
+.huevos__texto{ grid-column:1 / 6; display:grid; gap:22px; justify-items:start; position:relative; z-index:2; padding-bottom:clamp(8px, 4vh, 48px); }
+.huevos h2{ font-size:var(--t-1); max-width:9ch; }
+.huevos__frase{ font-size:clamp(1.08rem, 1rem + .4vw, 1.3rem); max-width:30ch; }
+.huevos__precio{ font:800 var(--t-2)/1.2 var(--f-display); font-variant-numeric:tabular-nums; display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; }
+.huevos__precio .por-confirmar{ font-family:var(--f-texto); }
+.huevos__escena{ grid-column:6 / 13; display:grid; gap:18px; margin-left:-3vw; }
+.huevos__fila{ display:flex; align-items:flex-end; justify-content:center; padding-top:clamp(80px, 12vw, 150px); }
+.huevo{ --lado:-1; appearance:none; border:0; padding:0; margin:0; background:none; color:inherit; cursor:pointer;
+  min-width:48px; min-height:48px; flex:none; border-radius:40% 40% 46% 46% / 54% 54% 40% 40%;
+  transition:translate .4s var(--ease-salida); -webkit-tap-highlight-color:transparent; }
+.huevo--grande{ width:42%; z-index:1; }
+.huevo--chico{ --lado:1; width:23%; margin-bottom:24%; margin-left:-3%; }
+.huevo--medio{ --lado:1; width:31%; margin-bottom:5%; margin-left:2%; }
+.huevo:hover{ translate:0 -4px; }
+.huevo[data-abierto]{ cursor:default; translate:none; }
+.huevos__estado{ min-height:56px; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:12px 20px; }
+.huevos__salido{ font:800 var(--t-2)/1.15 var(--f-display); text-align:center; }
+.huevos__salido:empty{ display:none; }
+.huevos__cerrar{ min-height:48px; padding:0 20px; border-radius:999px; border:2px solid var(--tinta); background:transparent; color:var(--tinta);
+  font:800 .98rem/1 var(--f-texto); cursor:pointer; transition:transform .15s var(--ease-salida); }
+.huevos__cerrar:hover{ background:color-mix(in oklab, var(--tinta) 8%, transparent); }
+.huevos__cerrar:active{ transform:scale(.96); }
+
+/* Abierto (estado final; el movimiento va en el bloque de abajo) */
+.huevo[data-abierto] .huevo__flopi{ opacity:1; }
+
+@media (prefers-reduced-motion: no-preference){
+  .huevo .huevo__caja{ animation:huevo-balanceo 1.5s var(--ease-cine) infinite alternate; animation-delay:calc(var(--i, 0) * -.7s); }
+  .huevo--chico .huevo__caja{ animation-duration:1.2s; }
+  .huevo--medio .huevo__caja{ animation-duration:1.8s; }
+  .huevos[data-fuera] .huevo__caja{ animation-play-state:paused; }
+  .huevo[data-abierto] .huevo__caja{ animation:none; }
+  .huevo[data-abierto] .huevo__arriba{
+    transform:translate(calc(var(--lado) * 28px), -104px) rotate(calc(var(--lado) * 30deg));
+    transition-duration:.7s;
+  }
+  .huevo[data-abierto] .huevo__flopi{
+    animation:huevo-sale .7s var(--ease-muelle) both, huevo-estira .7s var(--ease-salida) both;
+  }
+}
+@media (prefers-reduced-motion: reduce){
+  .huevo[data-abierto] .huevo__arriba{ opacity:0; }
+}
+@keyframes huevo-balanceo{ from{ transform:rotate(-3deg); } to{ transform:rotate(3deg); } }
+@keyframes huevo-sale{ from{ translate:0 55%; } to{ translate:0 0; } }
+@keyframes huevo-estira{
+  0%{ scale:.72 .55; }
+  30%{ scale:.88 1.16; }
+  60%{ scale:1.08 .92; }
+  100%{ scale:1 1; }
+}
+
+@media (max-width: 48rem){
+  .huevos__texto, .huevos__escena{ grid-column:1 / -1; }
+  .huevos__escena{ margin-left:0; }
+  .huevos__fila{ padding-top:clamp(70px, 22vw, 120px); }
+}
+
+/* ---------- Página huevos.html ---------- */
+.huevos-portada h1{ max-width:11ch; }
+
+.huevo-taller{ padding-block:clamp(40px, 7vw, 100px); }
+.huevo-taller .envoltorio{ display:grid; grid-template-columns:repeat(12, minmax(0,1fr)); gap:var(--gap); align-items:center; }
+.huevo-taller__vista{ grid-column:1 / 7; position:relative; isolation:isolate; width:100%; max-width:520px; justify-self:center;
+  display:grid; justify-items:center; padding:8% 0 14%; }
+.huevo-taller__vista::before{ content:""; position:absolute; inset:2% 0 6%; z-index:-1; background:var(--papel);
+  border-radius:46% 54% 58% 42% / 52% 46% 54% 48%; }
+.huevo-taller__vista .huevo__caja{ width:min(66%, 320px); }
+.huevo-taller__nombre{ position:absolute; bottom:6%; left:50%; translate:-50% 0; max-width:90%; overflow:hidden; text-overflow:ellipsis; }
+.huevo-taller__panel{ grid-column:8 / 13; display:grid; gap:24px; min-width:0; }
+.huevo-taller h2{ font-size:var(--t-1); }
+.huevo-taller .campo small{ color:var(--suave); font-weight:600; font-size:var(--t-chico); }
+.huevo-taller__precio{ font:800 clamp(1.6rem, 2.6vw, 2.2rem)/1.1 var(--f-display); font-variant-numeric:tabular-nums; display:flex; flex-wrap:wrap; align-items:center; gap:6px 12px; }
+.huevo-taller__precio small{ font:600 .9rem/1.2 var(--f-texto); color:var(--suave); }
+.huevo-taller__precio .por-confirmar{ font-family:var(--f-texto); }
+.huevo-taller .boton{ justify-self:start; }
+.huevo-taller__datos{ list-style:none; padding:0; margin:0; display:grid; gap:10px; font-weight:600; font-size:var(--t-chico); }
+.huevo-taller__datos a{ font-weight:800; }
+.huevos-aviso .por-confirmar{ margin-left:4px; }
+@media (max-width: 48rem){
+  .huevo-taller__vista, .huevo-taller__panel{ grid-column:1 / -1; }
+  .huevo-taller__vista{ max-width:380px; }
+}
+
+.huevo-pasos{ padding-block:clamp(64px, 10vw, 140px); }
+.huevo-pasos h2{ font-size:var(--t-1); margin-bottom:clamp(28px, 5vw, 64px); }
+.huevo-pasos__lista{ list-style:none; padding:0; margin:0; counter-reset:paso-huevo;
+  display:grid; grid-template-columns:repeat(12, minmax(0,1fr)); gap:var(--gap); align-items:start; }
+.huevo-paso{ counter-increment:paso-huevo; display:grid; gap:10px; align-content:start; }
+.huevo-paso::before{ content:counter(paso-huevo); width:64px; height:72px; display:grid; place-items:center;
+  font:800 1.8rem/1 var(--f-display); background:var(--papel); border-radius:50% 50% 46% 46% / 58% 58% 42% 42%; }
+.huevo-paso:nth-child(1){ grid-column:1 / 5; }
+.huevo-paso:nth-child(2){ grid-column:5 / 9; margin-top:8vh; }
+.huevo-paso:nth-child(3){ grid-column:9 / 13; margin-top:16vh; }
+.huevo-paso:nth-child(2)::before{ background:var(--limon); }
+.huevo-paso:nth-child(3)::before{ background:var(--chicle); }
+.huevo-paso h3{ font-size:var(--t-2); line-height:1.1; letter-spacing:-.01em; }
+.huevo-paso p{ color:var(--suave); font-weight:600; max-width:32ch; }
+@media (max-width: 48rem){
+  .huevo-paso:nth-child(n){ grid-column:1 / -1; margin-top:0; }
+  .huevo-paso:nth-child(2){ padding-left:12%; }
+  .huevo-paso:nth-child(3){ padding-left:24%; }
+}
+
+.quien{ padding-block:clamp(56px, 9vw, 120px); }
+.quien h2{ font-size:var(--t-1); }
+.quien > .envoltorio > p{ margin-top:16px; }
+.quien__lista{ list-style:none; padding:0; margin:clamp(28px, 5vw, 56px) 0 0; display:flex; flex-wrap:wrap; gap:clamp(12px, 3vw, 40px); align-items:flex-end; }
+.quien__flopi{ width:clamp(120px, 15vw, 190px); display:grid; justify-items:center; gap:8px; }
+.quien__flopi:nth-child(even){ margin-bottom:5vh; }
+.quien__flopi:nth-child(3){ width:clamp(140px, 19vw, 240px); }
+.quien__flopi .huevo__caja{ width:100%; }
+.quien__nombre{ font:800 var(--t-2)/1.1 var(--f-display); }
+@media (max-width: 30rem){
+  .quien__lista{ justify-content:center; }
+  .quien__flopi:nth-child(n){ width:calc(50% - 12px); margin-bottom:0; }
+}

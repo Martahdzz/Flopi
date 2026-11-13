@@ -4,7 +4,7 @@
   const datos = JSON.parse($("#datos-carrito").textContent);
   const euros = (n) => n.toFixed(2).replace(".", ",") + " €";
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-  const ENVIO = 4.90, ENVIO_GRATIS = 60;
+  const ENVIO = 4.90, ENVIO_GRATIS = 35;
   const lista = $("#lineas"), resumen = $("#resumen"), vacio = $("#vacio"), aviso = $("#aviso-pago");
 
   function pintar() {
@@ -18,7 +18,7 @@
         <div>
           <h2>${esc(x.producto)}${x.nombre ? ` de ${esc(x.nombre)}` : ""}</h2>
           <p>${esc(datos.colores[x.color]?.nombre || x.color)}, pelo ${esc((datos.colores[x.pelo]?.nombre || x.pelo).toLowerCase())}, ${esc((datos.accesorios[x.accesorio]?.nombre || x.accesorio).toLowerCase())}</p>
-          <p>${x.nombre ? `Nombre en la peana: «${esc(x.nombre)}»` : "Sin nombre en la peana"}</p>
+          ${x.nombre ? `<p>Nombre en la peana: «${esc(x.nombre)}»</p>` : ""}
         </div>
         <div class="linea__lado">
           <span class="linea__precio">${euros(x.precio)}</span>

@@ -2,7 +2,7 @@
 // genera ilustraciones SVG de cada producto y escribe todas las páginas HTML.
 import { readFile, writeFile, mkdir, cp, rm } from "node:fs/promises";
 import { pagina, tarjeta, euros, esc } from "../src/plantilla.mjs";
-import { flopiSVG } from "../src/flopi-svg.mjs";
+import { flopiSVG, huevoSVG } from "../src/flopi-svg.mjs";
 
 const raiz = new URL("../", import.meta.url);
 const dist = new URL("dist/", raiz);
@@ -27,10 +27,11 @@ for (const p of productos) {
   await writeFile(new URL(`assets/img/flopi-${p.slug}.svg`, dist),
     flopiSVG({ cuerpo: hex(p.cuerpo), pelo: hex(p.pelo), accesorio: p.accesorio, colorAccesorio: hex(p.colorAccesorio), id: p.slug }));
 }
+await writeFile(new URL("assets/img/flopi-huevo.svg", dist), huevoSVG({ color: hex("chicle"), id: "huevo-carrito" }).replace('style="fill:var(--huevo-color, ', 'style="fill:var(--x, '));
 await writeFile(new URL("assets/img/flopi-perdido.svg", dist),
   flopiSVG({ cuerpo: hex("cielo"), pelo: hex("tinta"), accesorio: "gorro", colorAccesorio: hex("chicle"), id: "perdido" }));
 await writeFile(new URL("assets/img/favicon.svg", dist),
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#F7B9CB"/><circle cx="14" cy="19" r="3" fill="#2E2A3A"/><circle cx="26" cy="19" r="3" fill="#2E2A3A"/><path d="M15 26 Q20 30 25 26" fill="none" stroke="#2E2A3A" stroke-width="2.5" stroke-linecap="round"/></svg>`);
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="18" fill="#43C8E8"/><text x="32" y="49" text-anchor="middle" font-family="Arial Rounded MT Bold, Arial Black, sans-serif" font-weight="900" font-size="46" fill="#FFFFFF" stroke="#0E3A6B" stroke-width="5" paint-order="stroke" stroke-linejoin="round">F</text></svg>`);
 
 const escribir = (archivo, html) => writeFile(new URL(archivo, dist), html);
 const paginas = [];
@@ -185,7 +186,6 @@ for (const p of productos) {
         camera-controls touch-action="pan-y" auto-rotate auto-rotate-delay="2500" rotation-per-second="16deg"
         interaction-prompt="none" shadow-intensity="1" shadow-softness=".8" exposure="1.05" environment-image="neutral"
         camera-orbit="20deg 78deg auto" min-camera-orbit="auto auto auto" field-of-view="28deg">
-        <span slot="hotspot-nombre" data-position="0 0.008 0.056" data-normal="0 0 1" class="etiqueta-nombre" id="etiqueta-nombre">TU NOMBRE</span>
         <span slot="progress-bar"></span>
       </model-viewer>
       <span class="visor__ayuda">Arrastra para girarlo</span>
@@ -198,11 +198,6 @@ for (const p of productos) {
       <p class="ficha__precio">${euros(p.precio)}<small>IVA incluido</small></p>
       <p class="ficha__frase">${esc(p.descripcion)}</p>
       <form id="form-ficha" class="ficha__form" novalidate>
-        <div class="campo">
-          <label for="nombre">Nombre para la peana</label>
-          <input type="text" id="nombre" name="nombre" maxlength="12" autocomplete="off" placeholder="Por ejemplo, Lucía" aria-describedby="nombre-ayuda">
-          <small id="nombre-ayuda">Hasta 12 letras. <button type="button" id="sin-nombre" class="enlace" style="min-height:32px;background:none;border:0;padding:0;color:inherit;text-decoration:underline;cursor:pointer;font:inherit;font-weight:800">Prefiero sin nombre</button></small>
-        </div>
         <fieldset class="campo"><legend>Color del cuerpo</legend><div class="muestras" data-grupo="color">${muestras("color", coloresCuerpo)}</div></fieldset>
         <fieldset class="campo"><legend>Color del pelo</legend><div class="muestras" data-grupo="pelo">${muestras("pelo", colores)}</div></fieldset>
         <fieldset class="campo"><legend>Accesorio</legend><div class="muestras" data-grupo="accesorio">${muestras("accesorio", accesorios)}</div></fieldset>
@@ -212,8 +207,7 @@ for (const p of productos) {
       </form>
       <p class="aviso-edad"><b>3+</b> No apto para menores de 3 años: contiene piezas pequeñas. <span class="por-confirmar">por confirmar</span></p>
       <ul class="garantias">
-        <li>${ICON.check}<span>Se fabrica en 5 días laborables y llega en 48 h.</span></li>
-        <li>${ICON.check}<span>Envío gratis desde 60 €.</span></li>
+        <li>${ICON.check}<span>Envío gratis desde 35 €.</span></li>
         <li>${ICON.check}<span>Al ser personalizado no admite desistimiento; si llega con un defecto, lo reponemos. <a href="envios.html">Ver condiciones</a></span></li>
       </ul>
     </div>
@@ -313,7 +307,7 @@ await texto("envios.html", "envios", "Envíos y devoluciones de Flopi", "Envíos
 <h2>Plazos</h2>
 <p>Fabricamos cada muñeco bajo pedido en 5 días laborables. El envío a península tarda 48 h; a Baleares, Canarias, Ceuta y Melilla, de 4 a 7 días.</p>
 <h2>Precio del envío</h2>
-<p>4,90 € por pedido. Gratis a partir de 60 €.</p>
+<p>4,90 € por pedido. Gratis a partir de 35 €.</p>
 <h2>Devoluciones</h2>
 <p>Como cada Flopi lleva un nombre y unos colores elegidos por ti, no admite el derecho de desistimiento de 14 días (art. 103 c del TRLGDCU). Te lo recordamos antes de pagar.</p>
 <p>Si llega roto o con un defecto de fabricación, escríbenos con una foto en los 30 días siguientes y lo reponemos sin coste. Se mantiene la garantía legal de conformidad.</p>`);
