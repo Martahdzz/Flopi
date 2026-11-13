@@ -1,64 +1,183 @@
 {
   "colores": {
-    "cielo":  { "nombre": "Cielo",  "hex": "#9EC5F0" },
-    "chicle": { "nombre": "Chicle", "hex": "#F4A6BC" },
-    "menta":  { "nombre": "Menta",  "hex": "#9ED9C0" },
-    "limon":  { "nombre": "Limón",  "hex": "#F7DC7A" },
-    "nube":   { "nombre": "Nube",   "hex": "#F1EEE8" },
-    "tinta":  { "nombre": "Tinta",  "hex": "#2E2A3A" }
+    "cielo": {
+      "nombre": "Cielo",
+      "hex": "#9EC5F0"
+    },
+    "chicle": {
+      "nombre": "Chicle",
+      "hex": "#F4A6BC"
+    },
+    "menta": {
+      "nombre": "Menta",
+      "hex": "#9ED9C0"
+    },
+    "limon": {
+      "nombre": "Limón",
+      "hex": "#F7DC7A"
+    },
+    "nube": {
+      "nombre": "Nube",
+      "hex": "#F1EEE8"
+    },
+    "tinta": {
+      "nombre": "Tinta",
+      "hex": "#2E2A3A"
+    }
   },
   "accesorios": {
-    "gorro":   { "nombre": "Gorro" },
-    "corona":  { "nombre": "Corona" },
-    "casco":   { "nombre": "Casco" },
-    "crestas": { "nombre": "Crestas" },
-    "orejas":  { "nombre": "Orejas" }
+    "gorro": {
+      "nombre": "Gorro"
+    },
+    "corona": {
+      "nombre": "Corona"
+    },
+    "casco": {
+      "nombre": "Casco"
+    },
+    "crestas": {
+      "nombre": "Crestas"
+    },
+    "orejas": {
+      "nombre": "Orejas"
+    }
   },
   "productos": [
     {
       "slug": "astro",
       "nombre": "Astro",
-      "precio": 34.90,
+      "precio": 34.9,
       "frase": "Para peques que miran mucho al cielo.",
       "descripcion": "Astro lleva su casco transparente de explorador y el nombre de su dueño grabado en la peana.",
-      "cuerpo": "nube", "pelo": "tinta", "accesorio": "casco", "colorAccesorio": "nube",
-      "fondo": "cielo"
+      "cuerpo": "nube",
+      "pelo": "tinta",
+      "accesorio": "casco",
+      "colorAccesorio": "nube",
+      "fondo": "cielo",
+      "subtitulo": "Explorador del espacio"
     },
     {
       "slug": "dino",
       "nombre": "Dino",
-      "precio": 32.90,
+      "precio": 32.9,
       "frase": "Tierno por fuera, valiente por dentro.",
       "descripcion": "Dino tiene crestas blanditas en la cabeza y un cuerpo redondito que cabe en una mano pequeña.",
-      "cuerpo": "menta", "pelo": "menta", "accesorio": "crestas", "colorAccesorio": "chicle",
-      "fondo": "limon"
+      "cuerpo": "menta",
+      "pelo": "menta",
+      "accesorio": "crestas",
+      "colorAccesorio": "chicle",
+      "fondo": "limon",
+      "subtitulo": "Valiente de bolsillo"
     },
     {
       "slug": "reina",
       "nombre": "Reina",
-      "precio": 29.90,
+      "precio": 29.9,
       "frase": "Manda en la estantería desde el primer día.",
       "descripcion": "Reina estrena corona dorada y elige el color de su vestido.",
-      "cuerpo": "limon", "pelo": "tinta", "accesorio": "corona", "colorAccesorio": "limon",
-      "fondo": "chicle"
+      "cuerpo": "limon",
+      "pelo": "tinta",
+      "accesorio": "corona",
+      "colorAccesorio": "limon",
+      "fondo": "chicle",
+      "subtitulo": "Manda en la estantería"
     },
     {
       "slug": "pompon",
       "nombre": "Pompón",
-      "precio": 29.90,
+      "precio": 29.9,
       "frase": "El clásico de Flopi, listo para el invierno.",
       "descripcion": "Pompón lleva gorro con borla. Es el personaje más fácil de personalizar.",
-      "cuerpo": "chicle", "pelo": "tinta", "accesorio": "gorro", "colorAccesorio": "cielo",
-      "fondo": "menta"
+      "cuerpo": "chicle",
+      "pelo": "tinta",
+      "accesorio": "gorro",
+      "colorAccesorio": "cielo",
+      "fondo": "menta",
+      "subtitulo": "El clásico de invierno"
     },
     {
       "slug": "michi",
       "nombre": "Michi",
-      "precio": 32.90,
+      "precio": 32.9,
       "frase": "Un gato que no araña ni se escapa.",
       "descripcion": "Michi tiene orejas de gato y una sonrisa que no se le borra.",
-      "cuerpo": "limon", "pelo": "limon", "accesorio": "orejas", "colorAccesorio": "limon",
-      "fondo": "cielo"
+      "cuerpo": "limon",
+      "pelo": "limon",
+      "accesorio": "orejas",
+      "colorAccesorio": "limon",
+      "fondo": "cielo",
+      "subtitulo": "Gato sin arañazos"
     }
+  ],
+  "destacados": [
+    "astro",
+    "dino",
+    "michi"
+  ],
+  "pack": {
+    "nombre": "Pack pandilla",
+    "descripcion": "Los cinco personajes con su nombre y la peana-escenario para jugar con ellos.",
+    "precio": 139.0,
+    "escenario": {
+      "nombre": "Peana-escenario",
+      "precio": 19.9,
+      "descripcion": "Una base con huecos para colocar a la pandilla. Se vende también por separado."
+    }
+  },
+  "descuentos": [
+    {
+      "unidades": 2,
+      "descuento": 5
+    },
+    {
+      "unidades": 3,
+      "descuento": 10
+    },
+    {
+      "unidades": 5,
+      "descuento": 15
+    }
+  ],
+  "faq": [
+    [
+      "¿Qué es un Flopi?",
+      "Un muñeco impreso en 3D en nuestro taller, con el nombre de tu peque grabado en la peana y los colores que elijas."
+    ],
+    [
+      "¿Cuánto mide?",
+      "Unos 18 cm de alto y 11 cm de ancho. Cabe en la mano de un niño y queda bien en una estantería."
+    ],
+    [
+      "¿Puedo mezclar personajes y colores?",
+      "Sí. Cada Flopi se personaliza por separado: color del cuerpo, pelo, accesorio y nombre."
+    ],
+    [
+      "¿Hay descuentos por cantidad?",
+      "Sí: 5 % desde 2 Flopis, 10 % desde 3 y 15 % desde 5. El pack pandilla tiene su propio precio."
+    ],
+    [
+      "¿Cuánto cuesta el envío?",
+      "4,90 € por pedido a península. Gratis a partir de 60 €."
+    ],
+    [
+      "¿Cuánto tarda?",
+      "Lo fabricamos en 5 días laborables y el envío tarda 48 h en península."
+    ],
+    [
+      "¿De qué material está hecho?",
+      "PLA, un plástico de origen vegetal, con pintura al agua y barniz mate."
+    ],
+    [
+      "¿Para qué edad es?",
+      "No es apto para menores de 3 años porque tiene piezas pequeñas. Con niños pequeños, siempre con un adulto delante."
+    ],
+    [
+      "¿Y si llega roto?",
+      "Escríbenos con el número de pedido y una foto en los 30 días siguientes y lo reponemos sin coste."
+    ],
+    [
+      "¿Se puede devolver?",
+      "Al llevar un nombre y colores elegidos por ti, no admite desistimiento. Se mantiene la garantía si llega con un defecto."
+    ]
   ]
 }
