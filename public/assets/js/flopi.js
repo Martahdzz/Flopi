@@ -68,6 +68,24 @@
     });
   }
 
+  /* ---------- Club Flopi: formulario de maqueta (no envía nada) ---------- */
+  const clubForm = $("#club-form");
+  if (clubForm) {
+    const aviso = $("#club-aviso");
+    const correo = $("input[type=email]", clubForm) || $("input", clubForm);
+    clubForm.noValidate = true;
+    clubForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const valor = correo ? correo.value.trim() : "";
+      const valido = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(valor) && (!correo || correo.checkValidity());
+      if (correo) correo.setAttribute("aria-invalid", String(!valido));
+      if (aviso) aviso.textContent = valido
+        ? "Gracias. Aún no está conectado: aquí te apuntaremos al Club Flopi."
+        : "Escribe un correo válido.";
+      if (!valido && correo) correo.focus();
+    });
+  }
+
   /* ---------- Movimiento ---------- */
   function iniciarMovimiento() {
     if (!window.gsap || !window.ScrollTrigger) return;
@@ -128,6 +146,38 @@
           ScrollTrigger.batch(marcos, { start: "top 88%",
             onEnter: (lote) => gsap.to(lote, { clipPath: "inset(0% 0% 0% 0% round 28px)", duration: 1, ease: "expo.inOut", stagger: 0.1, overwrite: true }) });
         }
+      }
+
+      // Destacados: stagger de entrada solo si no hay revelado nativo con view()
+      const destacados = $$(".destacado");
+      if (destacados.length && !CSS.supports("animation-timeline: view()")) {
+        gsap.set(destacados, { y: 60, autoAlpha: 0 });
+        ScrollTrigger.batch(destacados, { start: "top 85%",
+          onEnter: (lote) => gsap.to(lote, { y: 0, autoAlpha: 1, duration: 0.8, ease: "power3.out", stagger: { each: 0.09, from: "start" }, overwrite: true }) });
+      }
+
+      // Pack: los cinco Flopis salen juntos del centro y se abren en abanico
+      const composicion = $(".pack__composicion");
+      const flopisPack = composicion ? $$(".pack__flopi", composicion) : [];
+      if (flopisPack.length) {
+        const caja = composicion.getBoundingClientRect();
+        const centro = caja.left + caja.width / 2;
+        gsap.from(flopisPack, {
+          x: (i, el) => { const r = el.getBoundingClientRect(); return centro - (r.left + r.width / 2); },
+          rotation: (i, el) => -(parseFloat(getComputedStyle(el).rotate) || 0),
+          y: 24, scale: 0.9, autoAlpha: 0.4,
+          duration: 0.9, ease: "back.out(1.5)", stagger: { each: 0.06, from: "center" },
+          transformOrigin: "50% 100%",
+          scrollTrigger: { trigger: composicion, start: "top 75%", once: true },
+        });
+      }
+
+      // Descuentos: pop escalonado de las cifras
+      const valores = $$(".descuento__valor");
+      if (valores.length) {
+        gsap.from(valores, { scale: 0.7, yPercent: 18, autoAlpha: 0, duration: 0.6, ease: "back.out(1.7)", stagger: 0.12,
+          transformOrigin: "50% 100%",
+          scrollTrigger: { trigger: valores[0].closest(".descuentos__lista") || valores[0], start: "top 80%", once: true } });
       }
 
       // R7 · Los ojos de Flopi siguen al cursor
