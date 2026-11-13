@@ -45,3 +45,45 @@ export function flopiSVG({ cuerpo, pelo, accesorio, colorAccesorio, nombre = "",
   ${extra}
 </svg>`;
 }
+
+// Huevo sorpresa: dos mitades impresas que encajan, con la línea de rotura en zigzag a media altura.
+// Las mitades son grupos (<g class="huevo__arriba"> y <g class="huevo__abajo">) para poder animarlas por separado.
+// El relleno usa la variable CSS --huevo-color (si existe) y, si no, el hex recibido.
+const HUEVO_FORMA = "M100 10 C152 10 188 92 188 152 C188 208 150 242 100 242 C50 242 12 208 12 152 C12 92 48 10 100 10 Z";
+const HUEVO_ZIGZAG = Array.from({ length: 13 }, (_, i) => `${-20 + i * 20},${i % 2 ? 128 : 144}`).join(" ");
+
+export function huevoSVG({ color = "#F4A6BC", id = "h" }) {
+  const relleno = `style="fill:var(--huevo-color, ${color})"`;
+  const zig = HUEVO_ZIGZAG;
+  const borde = `<path d="${HUEVO_FORMA}" fill="none" stroke="#2E2A3A" stroke-width="5"/><polyline points="${zig}" fill="none" stroke="#2E2A3A" stroke-width="7" stroke-linejoin="round" clip-path="url(#${id}-forma)"/>`;
+  const capas = `<rect x="0" y="0" width="200" height="250" fill="url(#${id}-capas)" clip-path="url(#${id}-forma)"/>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 252" width="200" height="252" class="huevo__svg" aria-hidden="true" focusable="false">
+  <defs>
+    <pattern id="${id}-capas" width="8" height="5" patternUnits="userSpaceOnUse"><rect width="8" height="1.1" y="3.9" fill="#000" fill-opacity=".09"/></pattern>
+    <clipPath id="${id}-forma"><path d="${HUEVO_FORMA}"/></clipPath>
+    <clipPath id="${id}-cortearriba"><polygon points="-30,-60 230,-60 230,144 ${zig.split(" ").reverse().join(" ")}"/></clipPath>
+    <clipPath id="${id}-corteabajo"><polygon points="${zig} 230,144 230,300 -30,300 -30,144"/></clipPath>
+  </defs>
+  <ellipse class="huevo__sombra" cx="100" cy="245" rx="70" ry="6" fill="#2E2A3A" fill-opacity=".16"/>
+  <g class="huevo__abajo">
+    <g clip-path="url(#${id}-corteabajo)">
+      <path d="${HUEVO_FORMA}" ${relleno}/>
+      ${capas}
+      <path d="M150 168 C152 204 132 228 100 232 C140 236 176 210 178 166 Z" fill="#2E2A3A" fill-opacity=".1"/>
+      <polyline points="${zig}" fill="none" stroke="#2E2A3A" stroke-opacity=".14" stroke-width="14" stroke-linejoin="round" transform="translate(0 5)" clip-path="url(#${id}-forma)"/>
+      <circle cx="52" cy="186" r="7" fill="#fff" fill-opacity=".5"/><circle cx="128" cy="206" r="9" fill="#fff" fill-opacity=".5"/><circle cx="160" cy="176" r="5" fill="#fff" fill-opacity=".5"/>
+      ${borde}
+    </g>
+  </g>
+  <g class="huevo__arriba">
+    <g clip-path="url(#${id}-cortearriba)">
+      <path d="${HUEVO_FORMA}" ${relleno}/>
+      ${capas}
+      <path d="M150 52 C172 82 184 114 186 140 L160 140 C160 108 156 80 150 52 Z" fill="#2E2A3A" fill-opacity=".08"/>
+      <path d="M56 92 Q62 56 88 36" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="9" stroke-linecap="round"/>
+      <circle cx="120" cy="64" r="8" fill="#fff" fill-opacity=".5"/><circle cx="80" cy="112" r="6" fill="#fff" fill-opacity=".5"/><circle cx="146" cy="104" r="5" fill="#fff" fill-opacity=".5"/>
+      ${borde}
+    </g>
+  </g>
+</svg>`;
+}
