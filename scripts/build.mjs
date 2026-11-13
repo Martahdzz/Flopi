@@ -1,0 +1,272 @@
+// Construye la web estática en dist/: copia public/, librerías de node_modules,
+// genera ilustraciones SVG de cada producto y escribe todas las páginas HTML.
+import { readFile, writeFile, mkdir, cp, rm } from "node:fs/promises";
+import { pagina, tarjeta, euros, esc } from "../src/plantilla.mjs";
+import { flopiSVG } from "../src/flopi-svg.mjs";
+
+const raiz = new URL("../", import.meta.url);
+const dist = new URL("dist/", raiz);
+const datos = JSON.parse(await readFile(new URL("src/datos/productos.json", raiz), "utf8"));
+const { productos, colores, accesorios } = datos;
+const SITIO = process.env.SITIO_URL || "https://martahdzz.github.io/Flopi/";
+
+await rm(dist, { recursive: true, force: true });
+await cp(new URL("public/", raiz), dist, { recursive: true });
+await mkdir(new URL("assets/vendor/", dist), { recursive: true });
+await mkdir(new URL("assets/img/", dist), { recursive: true });
+for (const [desde, a] of [
+  ["node_modules/gsap/dist/gsap.min.js", "gsap.min.js"],
+  ["node_modules/gsap/dist/ScrollTrigger.min.js", "ScrollTrigger.min.js"],
+  ["node_modules/lenis/dist/lenis.min.js", "lenis.min.js"],
+  ["node_modules/@google/model-viewer/dist/model-viewer.min.js", "model-viewer.min.js"],
+]) await cp(new URL(desde, raiz), new URL("assets/vendor/" + a, dist));
+
+// ---- Imágenes de producto y favicon ----
+const hex = (k) => colores[k].hex;
+for (const p of productos) {
+  await writeFile(new URL(`assets/img/flopi-${p.slug}.svg`, dist),
+    flopiSVG({ cuerpo: hex(p.cuerpo), pelo: hex(p.pelo), accesorio: p.accesorio, colorAccesorio: hex(p.colorAccesorio), id: p.slug }));
+}
+await writeFile(new URL("assets/img/flopi-perdido.svg", dist),
+  flopiSVG({ cuerpo: hex("cielo"), pelo: hex("tinta"), accesorio: "gorro", colorAccesorio: hex("chicle"), id: "perdido" }));
+await writeFile(new URL("assets/img/favicon.svg", dist),
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#F7B9CB"/><circle cx="14" cy="19" r="3" fill="#2E2A3A"/><circle cx="26" cy="19" r="3" fill="#2E2A3A"/><path d="M15 26 Q20 30 25 26" fill="none" stroke="#2E2A3A" stroke-width="2.5" stroke-linecap="round"/></svg>`);
+
+const escribir = (archivo, html) => writeFile(new URL(archivo, dist), html);
+const paginas = [];
+const registrar = (archivo, html) => { paginas.push(archivo); return escribir(archivo, html); };
+
+// ---- Inicio ----
+const inicio = (await readFile(new URL("src/paginas/inicio.html", raiz), "utf8"))
+  .replace("{{PANDILLA}}", productos.map((p, i) => tarjeta(p, datos, i)).join("\n"));
+await registrar("index.html", pagina({
+  titulo: "Flopi, muñecos impresos en 3D con su nombre",
+  descripcion: "Diseñamos e imprimimos en 3D un muñeco con el nombre, los colores y el accesorio que elijas.",
+  cuerpo: inicio,
+}));
+
+// ---- Catálogo ----
+await registrar("munecos.html", pagina({
+  titulo: "Muñecos Flopi",
+  descripcion: "Conoce a la pandilla Flopi: cinco personajes que puedes personalizar con nombre y colores.",
+  activo: "munecos",
+  cuerpo: `<section class="portada" data-fondo="papel">
+  <div class="envoltorio">
+    <ol class="miga"><li><a href="index.html">Inicio</a></li><li>Muñecos</li></ol>
+    <h1>La pandilla al completo</h1>
+    <p>Elige un personaje y hazlo suyo: color, pelo, accesorio y su nombre en la peana.</p>
+  </div>
+</section>
+<section class="pandilla pandilla--catalogo" data-fondo="papel" aria-label="Personajes">
+  <div class="envoltorio"><div class="rejilla">
+${productos.map((p, i) => tarjeta(p, datos, i)).join("\n")}
+  </div></div>
+</section>`,
+}));
+
+// ---- Fichas ----
+const muestras = (grupo, opciones) => Object.entries(opciones).map(([k, v]) =>
+  `<button type="button" class="muestra" style="--muestra:${v.hex || "var(--papel)"}" data-valor="${k}" aria-pressed="false">${esc(v.nombre)}</button>`).join("\n");
+const coloresCuerpo = Object.fromEntries(Object.entries(colores).filter(([k]) => k !== "tinta"));
+const ICON = {
+  check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>`,
+};
+
+for (const p of productos) {
+  const otros = productos.filter((x) => x.slug !== p.slug).slice(0, 4);
+  const jsonld = {
+    "@context": "https://schema.org", "@type": "Product",
+    name: `Flopi ${p.nombre} personalizado`, brand: { "@type": "Brand", name: "Flopi" },
+    image: [`${SITIO}assets/img/flopi-${p.slug}.svg`], description: p.descripcion,
+    offers: { "@type": "Offer", price: p.precio.toFixed(2), priceCurrency: "EUR",
+      availability: "https://schema.org/MadeToOrder", url: `${SITIO}flopi-${p.slug}.html` },
+  };
+  await registrar(`flopi-${p.slug}.html`, pagina({
+    titulo: `Flopi ${p.nombre} personalizado`,
+    descripcion: `${p.frase} Muñeco impreso en 3D con su nombre. ${euros(p.precio)} con IVA.`,
+    activo: "munecos",
+    fondo: "papel",
+    cabezaExtra: `<script type="application/ld+json">${JSON.stringify(jsonld)}</script>
+<script type="module" src="assets/vendor/model-viewer.min.js"></script>`,
+    scripts: ["assets/js/ficha.js"],
+    cuerpo: `<section class="ficha" data-fondo="papel" style="--fondo-ficha:var(--${p.fondo})">
+  <div class="envoltorio">
+    <div class="ficha__visor" style="view-transition-name:flopi-${p.slug}">
+      <model-viewer id="visor" src="modelos/flopi.glb" poster="assets/img/flopi-${p.slug}.svg"
+        alt="Modelo 3D de Flopi ${esc(p.nombre)}. Arrastra para girarlo." loading="eager" reveal="auto"
+        camera-controls touch-action="pan-y" auto-rotate auto-rotate-delay="2500" rotation-per-second="16deg"
+        interaction-prompt="none" shadow-intensity="1" shadow-softness=".8" exposure="1.05" environment-image="neutral"
+        camera-orbit="20deg 78deg auto" min-camera-orbit="auto auto auto" field-of-view="28deg">
+        <span slot="hotspot-nombre" data-position="0 0.008 0.056" data-normal="0 0 1" class="etiqueta-nombre" id="etiqueta-nombre">TU NOMBRE</span>
+        <span slot="progress-bar"></span>
+      </model-viewer>
+      <span class="visor__ayuda">Arrastra para girarlo</span>
+    </div>
+    <div class="ficha__panel">
+      <div>
+        <ol class="miga"><li><a href="index.html">Inicio</a></li><li><a href="munecos.html">Muñecos</a></li><li>${esc(p.nombre)}</li></ol>
+        <h1>${esc(p.nombre)}</h1>
+      </div>
+      <p class="ficha__precio">${euros(p.precio)}<small>IVA incluido</small></p>
+      <p class="ficha__frase">${esc(p.descripcion)}</p>
+      <form id="form-ficha" class="ficha__form" novalidate>
+        <div class="campo">
+          <label for="nombre">Nombre para la peana</label>
+          <input type="text" id="nombre" name="nombre" maxlength="12" autocomplete="off" placeholder="Por ejemplo, Lucía" aria-describedby="nombre-ayuda">
+          <small id="nombre-ayuda">Hasta 12 letras. <button type="button" id="sin-nombre" class="enlace" style="min-height:32px;background:none;border:0;padding:0;color:inherit;text-decoration:underline;cursor:pointer;font:inherit;font-weight:800">Prefiero sin nombre</button></small>
+        </div>
+        <fieldset class="campo"><legend>Color del cuerpo</legend><div class="muestras" data-grupo="color">${muestras("color", coloresCuerpo)}</div></fieldset>
+        <fieldset class="campo"><legend>Color del pelo</legend><div class="muestras" data-grupo="pelo">${muestras("pelo", colores)}</div></fieldset>
+        <fieldset class="campo"><legend>Accesorio</legend><div class="muestras" data-grupo="accesorio">${muestras("accesorio", accesorios)}</div></fieldset>
+        <p><b>Tu elección:</b> <span id="resumen-eleccion"></span></p>
+        <div class="hero__acciones"><button type="submit" class="boton">Añadir al carrito</button></div>
+        <p class="aviso-maqueta" id="aviso" role="status" aria-live="polite"></p>
+      </form>
+      <p class="aviso-edad"><b>3+</b> No apto para menores de 3 años: contiene piezas pequeñas. <span class="por-confirmar">por confirmar</span></p>
+      <ul class="garantias">
+        <li>${ICON.check}<span>Se fabrica en 5 días laborables y llega en 48 h.</span></li>
+        <li>${ICON.check}<span>Envío gratis desde 60 €.</span></li>
+        <li>${ICON.check}<span>Al ser personalizado no admite desistimiento; si llega con un defecto, lo reponemos. <a href="envios.html">Ver condiciones</a></span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+<section class="detalles" data-fondo="${p.fondo}" aria-labelledby="titulo-detalles">
+  <div class="envoltorio">
+    <h2 id="titulo-detalles">Cómo es ${esc(p.nombre)}</h2>
+    <dl>
+      <dt>Tamaño</dt><dd>18 cm de alto, 11 cm de ancho.</dd>
+      <dt>Peso</dt><dd>Unos 120 g.</dd>
+      <dt>Material</dt><dd>PLA de origen vegetal, pintado a mano con pintura al agua. <span class="por-confirmar">por confirmar</span></dd>
+      <dt>Capas</dt><dd>Unas 900, de 0,2 mm cada una.</dd>
+      <dt>Cuidados</dt><dd>Limpiar con un paño húmedo. No meter en el lavavajillas ni dejar al sol.</dd>
+    </dl>
+  </div>
+  <div class="envoltorio">
+    <div class="fotos">
+      <figure class="foto" style="margin:0"><img src="assets/img/flopi-${p.slug}.svg" alt="" width="560" height="660" loading="lazy"><figcaption>Foto real: de frente</figcaption></figure>
+      <figure class="foto" style="margin:0"><img src="assets/img/flopi-${p.slug}.svg" alt="" width="560" height="660" loading="lazy"><figcaption>Foto real: detalle</figcaption></figure>
+      <figure class="foto" style="margin:0"><img src="assets/img/flopi-${p.slug}.svg" alt="" width="560" height="660" loading="lazy"><figcaption>Foto real: en una mano</figcaption></figure>
+    </div>
+  </div>
+</section>
+<section class="mas" data-fondo="papel" aria-labelledby="titulo-mas">
+  <div class="envoltorio">
+    <h2 id="titulo-mas">También en la pandilla</h2>
+    <div class="mas__fila">${otros.map((x, i) => tarjeta(x, datos, i)).join("\n")}</div>
+  </div>
+</section>
+<script type="application/json" id="datos-ficha">${JSON.stringify({ producto: p, colores, accesorios })}</script>`,
+  }));
+}
+
+// ---- Carrito ----
+await registrar("carrito.html", pagina({
+  titulo: "Tu carrito Flopi",
+  descripcion: "Revisa los muñecos que has personalizado antes de pagar.",
+  activo: "carrito",
+  scripts: ["assets/js/pagina-carrito.js"],
+  cuerpo: `<section class="portada" data-fondo="papel">
+  <div class="envoltorio">
+    <ol class="miga"><li><a href="index.html">Inicio</a></li><li>Carrito</li></ol>
+    <h1>Tu carrito</h1>
+  </div>
+</section>
+<section class="carrito" data-fondo="papel" aria-label="Muñecos en el carrito">
+  <div class="envoltorio">
+    <div class="vacio" id="vacio">
+      <img src="assets/img/flopi-perdido.svg" alt="" width="560" height="660">
+      <p>Todavía no hay ningún Flopi aquí.</p>
+      <a class="boton" href="munecos.html">Elegir personaje</a>
+    </div>
+    <ul class="lineas" id="lineas" hidden></ul>
+    <aside class="resumen" id="resumen" hidden aria-label="Resumen del pedido">
+      <dl>
+        <dt>Subtotal</dt><dd id="subtotal">0,00 €</dd>
+        <dt>Envío</dt><dd id="envio">Gratis</dd>
+        <dt class="total">Total</dt><dd class="total" id="total">0,00 €</dd>
+      </dl>
+      <small id="falta"></small>
+      <button type="button" class="boton" id="pagar">Ir a pagar</button>
+      <small>IVA incluido. Los productos personalizados no admiten desistimiento.</small>
+      <p id="aviso-pago" role="status" aria-live="polite"></p>
+    </aside>
+  </div>
+</section>
+<script type="application/json" id="datos-carrito">${JSON.stringify({ productos: Object.fromEntries(productos.map((p) => [p.slug, { fondo: p.fondo }])), colores, accesorios })}</script>`,
+}));
+
+// ---- Páginas de texto ----
+const texto = (archivo, activo, titulo, h1, intro, cuerpo) => registrar(archivo, pagina({
+  titulo, descripcion: intro, activo,
+  cuerpo: `<section class="portada" data-fondo="papel"><div class="envoltorio">
+    <ol class="miga"><li><a href="index.html">Inicio</a></li><li>${esc(h1)}</li></ol>
+    <h1>${esc(h1)}</h1><p>${esc(intro)}</p></div></section>
+<section class="texto" data-fondo="papel"><div class="envoltorio"><div class="texto__cuerpo">
+<p class="borrador">Borrador. Este texto debe revisarlo un profesional antes de publicar la tienda: no es asesoría legal.</p>
+${cuerpo}
+</div></div></section>`,
+}));
+
+await texto("seguridad.html", "seguridad", "Seguridad y materiales de Flopi", "Seguridad y materiales",
+  "Qué lleva cada muñeco, para qué edad es y cómo cuidarlo.", `
+<h2>Edad recomendada</h2>
+<p>Flopi no es apto para menores de 3 años porque contiene piezas pequeñas que podrían desprenderse. Pendiente de decidir si se comercializa como juguete (con marcado CE y ensayos EN 71) o como figura decorativa.</p>
+<h2>Materiales</h2>
+<ul><li>Cuerpo impreso en PLA, un plástico de origen vegetal.</li><li>Pintura al agua y barniz mate.</li><li>Peana con el nombre grabado.</li></ul>
+<p>Pendiente: fichas de seguridad de cada material y comprobación de migración de elementos (EN 71-3) y REACH.</p>
+<h2>Cuidados</h2>
+<ul><li>Limpiar con un paño húmedo.</li><li>No dejar al sol ni cerca de fuentes de calor: el PLA se deforma a partir de unos 55 °C.</li><li>Si una pieza se rompe, retirarla del alcance de los niños pequeños.</li></ul>
+<h2>Diseños</h2>
+<p>Los personajes parten de diseños con licencia comercial. Pendiente: guardar por escrito la licencia de cada diseño de 3dgob y confirmar que permite vender impresiones personalizadas.</p>`);
+
+await texto("envios.html", "envios", "Envíos y devoluciones de Flopi", "Envíos y devoluciones",
+  "Cuánto tarda tu Flopi en llegar y qué pasa si algo sale mal.", `
+<h2>Plazos</h2>
+<p>Fabricamos cada muñeco bajo pedido en 5 días laborables. El envío a península tarda 48 h; a Baleares, Canarias, Ceuta y Melilla, de 4 a 7 días.</p>
+<h2>Precio del envío</h2>
+<p>4,90 € por pedido. Gratis a partir de 60 €.</p>
+<h2>Devoluciones</h2>
+<p>Como cada Flopi lleva un nombre y unos colores elegidos por ti, no admite el derecho de desistimiento de 14 días (art. 103 c del TRLGDCU). Te lo recordamos antes de pagar.</p>
+<p>Si llega roto o con un defecto de fabricación, escríbenos con una foto en los 30 días siguientes y lo reponemos sin coste. Se mantiene la garantía legal de conformidad.</p>`);
+
+await texto("aviso-legal.html", "", "Aviso legal de Flopi", "Aviso legal",
+  "Datos del titular de la web y condiciones de uso.", `
+<h2>Titular</h2>
+<p>Pendiente: nombre o razón social, NIF, domicilio, correo de contacto y datos registrales, según la LSSI.</p>
+<h2>Condiciones de venta</h2>
+<p>Pendiente: condiciones generales de contratación, precios con IVA, formas de pago, plazos y garantías.</p>
+<h2>Propiedad intelectual</h2>
+<p>Pendiente: titularidad de la marca Flopi y licencias de los diseños de terceros.</p>`);
+
+await texto("privacidad.html", "", "Privacidad en Flopi", "Privacidad",
+  "Qué datos pedimos, para qué y cuánto tiempo los guardamos.", `
+<h2>Qué datos tratamos</h2>
+<ul><li>Datos de envío y contacto de quien compra.</li><li>El nombre que se graba en el muñeco, que puede ser el de un menor: solo se usa para fabricar el pedido.</li></ul>
+<h2>Cuánto tiempo</h2>
+<p>Pendiente: plazos de conservación (por ejemplo, el nombre grabado se borra al cerrar el pedido; la facturación, el plazo que exija la ley).</p>
+<h2>Cookies</h2>
+<p>Esta versión de prueba no usa cookies. Guarda en tu navegador el carrito y la paleta elegida (localStorage), que no salen de tu dispositivo.</p>
+<h2>Tus derechos</h2>
+<p>Pendiente: cómo ejercer acceso, rectificación, supresión y demás derechos del RGPD, y datos del responsable.</p>`);
+
+// ---- 404 ----
+await escribir("404.html", pagina({
+  titulo: "Página no encontrada en Flopi",
+  descripcion: "Esta página no existe.",
+  cuerpo: `<section class="perdido" data-fondo="papel"><div class="envoltorio">
+  <div class="perdido__texto"><h1>Uy.</h1><p>Esta página se ha perdido. Seguro que está jugando con otro Flopi.</p><a class="boton" href="index.html">Volver al inicio</a></div>
+  <img src="assets/img/flopi-perdido.svg" alt="" width="560" height="660">
+</div></section>`,
+}));
+
+// ---- SEO ----
+await writeFile(new URL("sitemap.xml", dist), `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${paginas.map((p) => `  <url><loc>${SITIO}${p === "index.html" ? "" : p}</loc></url>`).join("\n")}
+</urlset>
+`);
+await writeFile(new URL("robots.txt", dist), `User-agent: *\nAllow: /\nSitemap: ${SITIO}sitemap.xml\n`);
+await writeFile(new URL(".nojekyll", dist), "");
+
+console.log(`dist/ listo: ${paginas.length} páginas + 404`);

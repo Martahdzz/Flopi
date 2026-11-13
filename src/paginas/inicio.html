@@ -1,0 +1,212 @@
+<!-- Piezas reutilizables del muñeco: los colores llegan por variables CSS (--c-cuerpo, --c-pelo, --c-extra) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <pattern id="lineas-capa" width="8" height="6" patternUnits="userSpaceOnUse">
+      <rect width="8" height="1.2" y="4.8" fill="#000" fill-opacity=".08"/>
+    </pattern>
+    <filter id="mano" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence baseFrequency=".035" numOctaves="2" seed="7"/>
+      <feDisplacementMap in="SourceGraphic" scale="3"/>
+    </filter>
+    <clipPath id="silueta">
+      <circle cx="120" cy="98" r="72"/>
+      <path d="M58 260 C50 196 72 150 120 150 C168 150 190 196 182 260 Z"/>
+      <ellipse cx="58" cy="208" rx="15" ry="27" transform="rotate(18 58 208)"/>
+      <ellipse cx="182" cy="208" rx="15" ry="27" transform="rotate(-18 182 208)"/>
+    </clipPath>
+    <symbol id="flopi" viewBox="0 0 240 300">
+      <ellipse cx="120" cy="290" rx="78" ry="8" fill="var(--tinta)" fill-opacity=".14"/>
+      <rect x="44" y="256" width="152" height="30" rx="15" fill="var(--c-peana, var(--tinta))"/>
+      <ellipse cx="58" cy="208" rx="15" ry="27" transform="rotate(18 58 208)" fill="var(--c-cuerpo)"/>
+      <ellipse cx="182" cy="208" rx="15" ry="27" transform="rotate(-18 182 208)" fill="var(--c-cuerpo)"/>
+      <path d="M58 260 C50 196 72 150 120 150 C168 150 190 196 182 260 Z" fill="var(--c-cuerpo)"/>
+      <ellipse cx="120" cy="214" rx="30" ry="26" fill="#fff" fill-opacity=".35"/>
+      <circle cx="120" cy="98" r="72" fill="var(--piel)"/>
+      <path d="M62 78 C70 30 120 14 160 34 C176 42 186 58 186 74 C168 58 150 54 132 62 C120 44 92 46 62 78 Z" fill="var(--c-pelo)"/>
+      <ellipse cx="94" cy="104" rx="13" ry="15" fill="#fff"/><ellipse cx="146" cy="104" rx="13" ry="15" fill="#fff"/>
+      <circle cx="95" cy="106" r="7.5" fill="var(--tinta)"/><circle cx="147" cy="106" r="7.5" fill="var(--tinta)"/>
+      <circle cx="98" cy="102" r="2.4" fill="#fff"/><circle cx="150" cy="102" r="2.4" fill="#fff"/>
+      <circle cx="76" cy="128" r="10" fill="var(--chicle)" fill-opacity=".8"/><circle cx="164" cy="128" r="10" fill="var(--chicle)" fill-opacity=".8"/>
+      <path d="M108 132 Q120 144 132 132" fill="none" stroke="var(--tinta)" stroke-width="4" stroke-linecap="round"/>
+      <rect x="20" y="20" width="200" height="245" fill="url(#lineas-capa)" clip-path="url(#silueta)"/>
+    </symbol>
+    <symbol id="extra-casco" viewBox="0 0 240 300">
+      <circle cx="120" cy="98" r="86" fill="#fff" fill-opacity=".28" stroke="var(--tinta)" stroke-width="5"/>
+      <path d="M74 44 Q96 28 118 30" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="120" cy="8" r="9" fill="var(--c-extra)" stroke="var(--tinta)" stroke-width="4"/>
+    </symbol>
+    <symbol id="extra-dino" viewBox="0 0 240 300">
+      <path d="M78 40 L92 8 L104 34 L120 2 L134 32 L150 8 L160 40 Z" fill="var(--c-extra)" stroke="var(--tinta)" stroke-width="4" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="extra-corona" viewBox="0 0 240 300">
+      <path d="M86 40 L90 6 L106 26 L120 0 L134 26 L150 6 L154 40 Z" fill="var(--c-extra)" stroke="var(--tinta)" stroke-width="4" stroke-linejoin="round"/>
+      <circle cx="120" cy="30" r="5" fill="var(--chicle)"/>
+    </symbol>
+    <symbol id="extra-gorro" viewBox="0 0 240 300">
+      <path d="M56 58 Q120 -10 184 58 Z" fill="var(--c-extra)" stroke="var(--tinta)" stroke-width="4" stroke-linejoin="round"/>
+      <rect x="40" y="52" width="160" height="16" rx="8" fill="var(--c-extra)" stroke="var(--tinta)" stroke-width="4"/>
+      <circle cx="120" cy="34" r="9" fill="var(--limon)" stroke="var(--tinta)" stroke-width="3"/>
+    </symbol>
+    <symbol id="extra-orejas" viewBox="0 0 240 300">
+      <path d="M60 64 L58 8 L104 36 Z M180 64 L182 8 L136 36 Z" fill="var(--c-extra)" stroke="var(--tinta)" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M68 46 L67 22 L88 36 Z M172 46 L173 22 L152 36 Z" fill="var(--chicle)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<section class="hero" data-fondo="papel" aria-labelledby="titulo-hero">
+    <div class="forma forma--a" data-profundidad="-0.25" aria-hidden="true"></div>
+    <div class="forma forma--b" data-profundidad="0.35" aria-hidden="true"></div>
+    <div class="forma forma--c" data-profundidad="0.6" aria-hidden="true"></div>
+    <div class="envoltorio">
+      <div class="hero__texto">
+        <h1 id="titulo-hero">
+          <span class="hero__linea"><span>Tu peque,</span></span>
+          <span class="hero__linea hero__linea--sangra"><span>hecho</span></span>
+          <span class="hero__linea"><span>muñeco.</span></span>
+        </h1>
+        <p class="hero__lead">Diseñamos e imprimimos en 3D un muñeco con su nombre, sus colores y su gorro favorito.</p>
+        <div class="hero__acciones">
+          <a class="boton hero__cta" href="munecos.html">Crea tu Flopi</a>
+          <a class="enlace hero__cta" href="#pandilla">Conoce a la pandilla</a>
+        </div>
+        <ul class="hero__datos hero__cta">
+          <li>Desde 29,90 € con IVA</li>
+          <li>Llega en 7–10 días</li>
+          <li>Hecho en España</li>
+        </ul>
+      </div>
+      <div class="hero__flopi">
+        <svg viewBox="-20 -20 280 320" role="img" aria-label="Flopi, un muñeco redondito con gorro de colores" style="--c-cuerpo:var(--cielo);--c-pelo:var(--tinta);--c-extra:var(--chicle);--c-peana:var(--tinta)">
+          <g class="flopi__cuerpo">
+            <ellipse cx="120" cy="290" rx="78" ry="8" fill="var(--tinta)" fill-opacity=".14"/>
+            <rect x="44" y="256" width="152" height="30" rx="15" fill="var(--c-peana)"/>
+            <text x="120" y="277" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="17" fill="var(--papel)">LUCÍA</text>
+            <ellipse cx="58" cy="208" rx="15" ry="27" transform="rotate(18 58 208)" fill="var(--c-cuerpo)"/>
+            <ellipse cx="182" cy="208" rx="15" ry="27" transform="rotate(-18 182 208)" fill="var(--c-cuerpo)"/>
+            <path d="M58 260 C50 196 72 150 120 150 C168 150 190 196 182 260 Z" fill="var(--c-cuerpo)"/>
+            <ellipse cx="120" cy="214" rx="30" ry="26" fill="#fff" fill-opacity=".35"/>
+            <rect x="20" y="140" width="200" height="125" fill="url(#lineas-capa)" clip-path="url(#silueta)"/>
+          </g>
+          <g class="flopi__cabeza">
+            <circle cx="120" cy="98" r="72" fill="var(--piel)"/>
+            <path d="M62 78 C70 30 120 14 160 34 C176 42 186 58 186 74 C168 58 150 54 132 62 C120 44 92 46 62 78 Z" fill="var(--c-pelo)"/>
+            <ellipse cx="94" cy="104" rx="13" ry="15" fill="#fff"/><ellipse cx="146" cy="104" rx="13" ry="15" fill="#fff"/>
+            <g class="flopi__pupila"><circle cx="95" cy="106" r="7.5" fill="var(--tinta)"/><circle cx="98" cy="102" r="2.4" fill="#fff"/></g>
+            <g class="flopi__pupila"><circle cx="147" cy="106" r="7.5" fill="var(--tinta)"/><circle cx="150" cy="102" r="2.4" fill="#fff"/></g>
+            <circle cx="76" cy="128" r="10" fill="var(--chicle)" fill-opacity=".8"/><circle cx="164" cy="128" r="10" fill="var(--chicle)" fill-opacity=".8"/>
+            <path d="M108 132 Q120 144 132 132" fill="none" stroke="var(--tinta)" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="120" cy="98" r="72" fill="url(#lineas-capa)"/>
+          </g>
+          <g class="flopi__extra"><use width="240" height="300" href="#extra-gorro"/></g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="capas" id="capas" data-fondo="menta" aria-labelledby="titulo-capas">
+    <div class="capas__pin">
+      <div class="envoltorio">
+        <div class="capas__texto">
+          <h2 id="titulo-capas">Así nace un Flopi</h2>
+          <ol class="pasos">
+            <li class="paso"><h3>Eliges cómo es</h3><p>Color, nombre y un accesorio.</p></li>
+            <li class="paso"><h3>Lo imprimimos capa a capa</h3><p>Una impresora 3D lo levanta en capas de 0,2 mm.</p></li>
+            <li class="paso"><h3>Lo repasamos a mano</h3><p>Lijamos, revisamos cada pieza y lo pintamos.</p></li>
+            <li class="paso"><h3>Llega a casa</h3><p>En una caja lista para regalar.</p></li>
+          </ol>
+          <p class="capas__medida">Unas 900 capas por muñeco de 18 cm.</p>
+        </div>
+        <div class="capas__escenario" aria-hidden="true">
+          <svg class="capas__fantasma" viewBox="-20 -20 280 320">
+            <g fill="none" stroke="var(--tinta)" stroke-width="2.5" stroke-dasharray="6 7" filter="url(#mano)">
+              <circle cx="120" cy="98" r="72"/>
+              <path d="M58 260 C50 196 72 150 120 150 C168 150 190 196 182 260 Z"/>
+              <rect x="44" y="256" width="152" height="30" rx="15"/>
+              <path d="M56 58 Q120 -10 184 58"/>
+            </g>
+          </svg>
+          <svg class="capas__flopi" viewBox="-20 -20 280 320" style="--c-cuerpo:var(--chicle);--c-pelo:var(--tinta);--c-extra:var(--cielo);--c-peana:var(--tinta)">
+            <use width="240" height="300" href="#flopi"/><use width="240" height="300" href="#extra-gorro"/>
+          </svg>
+          <div class="capas__boquilla"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pandilla" id="pandilla" data-fondo="papel" aria-labelledby="titulo-pandilla">
+    <div class="envoltorio">
+      <div class="pandilla__cabeza">
+        <h2 id="titulo-pandilla">La pandilla</h2>
+        <p>Cinco personajes para empezar. Todos cambian de color y llevan el nombre que elijas. <a href="munecos.html">Ver todos</a></p>
+      </div>
+      <div class="rejilla">
+{{PANDILLA}}
+      </div>
+    </div>
+  </section>
+
+  <section class="frase" data-fondo="chicle" aria-label="Lema">
+    <div class="envoltorio">
+      <h2><span>Cada Flopi</span><span>es único,</span><span>como su dueño.</span></h2>
+      <svg class="frase__firma" viewBox="0 0 400 40" aria-hidden="true"><path pathLength="1" d="M5 24 Q60 6 120 22 T240 20 T395 14" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" filter="url(#mano)"/></svg>
+    </div>
+  </section>
+
+  <section class="taller" id="taller" data-fondo="limon" aria-labelledby="titulo-taller">
+    <div class="envoltorio">
+      <div class="taller__vista">
+        <svg id="vista" viewBox="-20 -30 280 330" role="img" aria-label="Vista previa de tu Flopi" style="--c-cuerpo:var(--cielo);--c-pelo:var(--tinta);--c-extra:var(--chicle);--c-peana:var(--tinta)">
+          <g id="vista-cuerpo">
+            <use width="240" height="300" href="#flopi"/>
+            <text id="vista-nombre" x="120" y="277" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="17" fill="var(--papel)">LUCÍA</text>
+            <use id="vista-extra" width="240" height="300" href="#extra-gorro"/>
+          </g>
+        </svg>
+      </div>
+      <form class="taller__panel" id="taller-form" novalidate>
+        <h2 id="titulo-taller">Hazlo suyo</h2>
+        <div class="campo">
+          <label for="nombre">Su nombre</label>
+          <input type="text" id="nombre" name="nombre" value="Lucía" maxlength="12" autocomplete="off" aria-describedby="nombre-ayuda">
+          <small id="nombre-ayuda">Hasta 12 letras. Va grabado en la peana.</small>
+        </div>
+        <fieldset class="campo">
+          <legend>Color del cuerpo</legend>
+          <div class="muestras" data-grupo="cuerpo">
+            <button type="button" class="muestra" style="--muestra:var(--cielo)" data-valor="var(--cielo)" data-color="cielo" aria-pressed="true">Cielo</button>
+            <button type="button" class="muestra" style="--muestra:var(--chicle)" data-valor="var(--chicle)" data-color="chicle" aria-pressed="false">Chicle</button>
+            <button type="button" class="muestra" style="--muestra:var(--menta)" data-valor="var(--menta)" data-color="menta" aria-pressed="false">Menta</button>
+            <button type="button" class="muestra" style="--muestra:var(--limon)" data-valor="var(--limon)" data-color="limon" aria-pressed="false">Limón</button>
+          </div>
+        </fieldset>
+        <fieldset class="campo">
+          <legend>Accesorio</legend>
+          <div class="muestras" data-grupo="extra">
+            <button type="button" class="muestra" style="--muestra:var(--chicle)" data-valor="#extra-gorro" aria-pressed="true">Gorro</button>
+            <button type="button" class="muestra" style="--muestra:var(--limon)" data-valor="#extra-corona" aria-pressed="false">Corona</button>
+            <button type="button" class="muestra" style="--muestra:var(--menta)" data-valor="#extra-dino" aria-pressed="false">Crestas</button>
+            <button type="button" class="muestra" style="--muestra:var(--cielo)" data-valor="#extra-casco" aria-pressed="false">Casco</button>
+          </div>
+        </fieldset>
+        <div class="hero__acciones">
+          <button type="submit" class="boton">Terminar en 3D (29,90 €)</button>
+        </div>
+        <p class="aviso-maqueta" id="aviso" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <section class="padres" id="padres" data-fondo="papel" aria-labelledby="titulo-padres">
+    <div class="envoltorio">
+      <h2 id="titulo-padres">Lo que preguntan los padres</h2>
+      <dl class="respuestas">
+        <div class="respuesta"><dt>¿Para qué edad es?</dt><dd>Recomendado a partir de 3 años: tiene piezas pequeñas. <span class="por-confirmar">por confirmar</span></dd></div>
+        <div class="respuesta"><dt>¿De qué está hecho?</dt><dd>Plástico PLA de origen vegetal y pintura al agua. <span class="por-confirmar">por confirmar</span></dd></div>
+        <div class="respuesta"><dt>¿Cuándo llega?</dt><dd>Lo fabricamos en 5 días laborables y el envío tarda 48 h en península.</dd></div>
+        <div class="respuesta"><dt>¿Y si no nos gusta?</dt><dd>Como lleva su nombre, no se puede devolver por desistimiento. Si llega roto o con un defecto, lo reponemos gratis.</dd></div>
+        <div class="respuesta"><dt>¿El pago es seguro?</dt><dd>Pagas con tarjeta, Bizum o Apple Pay en una pasarela cifrada. No guardamos tus datos de pago.</dd></div>
+      </dl>
+    </div>
+  </section>

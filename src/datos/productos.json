@@ -1,0 +1,64 @@
+{
+  "colores": {
+    "cielo":  { "nombre": "Cielo",  "hex": "#9EC5F0" },
+    "chicle": { "nombre": "Chicle", "hex": "#F4A6BC" },
+    "menta":  { "nombre": "Menta",  "hex": "#9ED9C0" },
+    "limon":  { "nombre": "Limón",  "hex": "#F7DC7A" },
+    "nube":   { "nombre": "Nube",   "hex": "#F1EEE8" },
+    "tinta":  { "nombre": "Tinta",  "hex": "#2E2A3A" }
+  },
+  "accesorios": {
+    "gorro":   { "nombre": "Gorro" },
+    "corona":  { "nombre": "Corona" },
+    "casco":   { "nombre": "Casco" },
+    "crestas": { "nombre": "Crestas" },
+    "orejas":  { "nombre": "Orejas" }
+  },
+  "productos": [
+    {
+      "slug": "astro",
+      "nombre": "Astro",
+      "precio": 34.90,
+      "frase": "Para peques que miran mucho al cielo.",
+      "descripcion": "Astro lleva su casco transparente de explorador y el nombre de su dueño grabado en la peana.",
+      "cuerpo": "nube", "pelo": "tinta", "accesorio": "casco", "colorAccesorio": "nube",
+      "fondo": "cielo"
+    },
+    {
+      "slug": "dino",
+      "nombre": "Dino",
+      "precio": 32.90,
+      "frase": "Tierno por fuera, valiente por dentro.",
+      "descripcion": "Dino tiene crestas blanditas en la cabeza y un cuerpo redondito que cabe en una mano pequeña.",
+      "cuerpo": "menta", "pelo": "menta", "accesorio": "crestas", "colorAccesorio": "chicle",
+      "fondo": "limon"
+    },
+    {
+      "slug": "reina",
+      "nombre": "Reina",
+      "precio": 29.90,
+      "frase": "Manda en la estantería desde el primer día.",
+      "descripcion": "Reina estrena corona dorada y elige el color de su vestido.",
+      "cuerpo": "limon", "pelo": "tinta", "accesorio": "corona", "colorAccesorio": "limon",
+      "fondo": "chicle"
+    },
+    {
+      "slug": "pompon",
+      "nombre": "Pompón",
+      "precio": 29.90,
+      "frase": "El clásico de Flopi, listo para el invierno.",
+      "descripcion": "Pompón lleva gorro con borla. Es el personaje más fácil de personalizar.",
+      "cuerpo": "chicle", "pelo": "tinta", "accesorio": "gorro", "colorAccesorio": "cielo",
+      "fondo": "menta"
+    },
+    {
+      "slug": "michi",
+      "nombre": "Michi",
+      "precio": 32.90,
+      "frase": "Un gato que no araña ni se escapa.",
+      "descripcion": "Michi tiene orejas de gato y una sonrisa que no se le borra.",
+      "cuerpo": "limon", "pelo": "limon", "accesorio": "orejas", "colorAccesorio": "limon",
+      "fondo": "cielo"
+    }
+  ]
+}
