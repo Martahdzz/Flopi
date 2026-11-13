@@ -1,6 +1,6 @@
 /* Flopi · huevos sorpresa.
    Portada (#huevos): al pulsar un huevo salta la mitad de arriba y aparece un mini Flopi al azar.
-   Página huevos.html (#huevo-form): color del huevo + nombre para la peana + añadir al carrito.
+   Página huevos.html (#huevo-form): color del huevo + añadir al carrito.
    El CSS base ya muestra los huevos y el CTA; esto solo añade la interacción. */
 (() => {
   const $ = (s, c = document) => c.querySelector(s);
@@ -71,17 +71,12 @@
   const form = $("#huevo-form");
   if (form) {
     const vista = $("#huevo-vista");
-    const etiqueta = $("#huevo-etiqueta");
-    const campo = $("#huevo-nombre");
     const aviso = $("#huevo-aviso");
     const grupo = $(".muestras[data-grupo='color']", form);
     const precio = Number(form.dataset.precio) || 14.9;
     const estado = {
       color: $(".muestra[aria-pressed='true']", grupo)?.dataset.valor || "chicle",
-      nombre: "",
     };
-
-    const pintarNombre = () => { etiqueta.textContent = (estado.nombre || "Tu nombre").toUpperCase(); };
 
     grupo.addEventListener("click", (e) => {
       const b = e.target.closest(".muestra"); if (!b) return;
@@ -95,27 +90,15 @@
       }
     });
 
-    campo.addEventListener("input", () => {
-      const limpio = limpiarNombre(campo.value);
-      if (limpio !== campo.value) campo.value = limpio;
-      estado.nombre = limpio.trim();
-      pintarNombre();
-    });
-
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-      if (!estado.nombre) {
-        aviso.textContent = "Escribe el nombre que irá en la peana.";
-        campo.focus();
-        return;
-      }
       if (!window.FlopiCarrito) {
         aviso.textContent = "No se ha podido abrir el carrito. Recarga la página e inténtalo otra vez.";
         return;
       }
       const total = window.FlopiCarrito.anadir({
         slug: "huevo", producto: "Huevo sorpresa", precio,
-        nombre: estado.nombre, color: estado.color, pelo: "tinta", accesorio: "sorpresa",
+        nombre: "", color: estado.color, pelo: "tinta", accesorio: "sorpresa",
       });
       aviso.textContent = `Añadido. Llevas ${total} ${total === 1 ? "artículo" : "artículos"} en el carrito. `;
       const enlace = document.createElement("a");
@@ -124,6 +107,5 @@
       aviso.append(enlace);
     });
 
-    pintarNombre();
   }
 })();

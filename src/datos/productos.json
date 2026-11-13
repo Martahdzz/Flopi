@@ -48,7 +48,7 @@
       "nombre": "Astro",
       "precio": 34.9,
       "frase": "Para peques que miran mucho al cielo.",
-      "descripcion": "Astro lleva su casco transparente de explorador y el nombre de su dueño grabado en la peana.",
+      "descripcion": "Astro lleva su casco transparente de explorador y una peana a juego.",
       "cuerpo": "nube",
       "pelo": "tinta",
       "accesorio": "casco",
@@ -116,7 +116,7 @@
   ],
   "pack": {
     "nombre": "Pack pandilla",
-    "descripcion": "Los cinco personajes con su nombre y la peana-escenario para jugar con ellos.",
+    "descripcion": "Los cinco personajes y la peana-escenario para jugar con ellos.",
     "precio": 139.0,
     "escenario": {
       "nombre": "Peana-escenario",
@@ -141,7 +141,7 @@
   "faq": [
     [
       "¿Qué es un Flopi?",
-      "Un muñeco impreso en 3D en nuestro taller, con el nombre de tu peque grabado en la peana y los colores que elijas."
+      "Un muñeco impreso en 3D en nuestro taller, con los colores y el accesorio que elijas."
     ],
     [
       "¿Cuánto mide?",
@@ -149,7 +149,7 @@
     ],
     [
       "¿Puedo mezclar personajes y colores?",
-      "Sí. Cada Flopi se personaliza por separado: color del cuerpo, pelo, accesorio y nombre."
+      "Sí. Cada Flopi se personaliza por separado: color del cuerpo, pelo y accesorio."
     ],
     [
       "¿Hay descuentos por cantidad?",
@@ -177,7 +177,7 @@
     ],
     [
       "¿Se puede devolver?",
-      "Al llevar un nombre y colores elegidos por ti, no admite desistimiento. Se mantiene la garantía si llega con un defecto."
+      "Pendiente de confirmar con un profesional: sin nombre grabado, lo normal es que se aplique el derecho de desistimiento de 14 días. Si llega con un defecto, lo reponemos."
     ]
   ]
 }

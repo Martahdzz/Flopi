@@ -1,3 +1,4 @@
+@font-face{ font-family:"Fredoka Flopi"; src:url("../fonts/fredoka-700.woff2") format("woff2"); font-weight:700; font-style:normal; font-display:swap; }
 /* Layout: página-juguete asimétrica en 12 columnas; un momento firma (Flopi impreso capa a capa, sección fijada); el fondo cambia de color por sección. */
 :root, :root[data-paleta="pastel"]{
   --papel:#FFF8F1; --tinta:#2E2A3A; --chicle:#F7B9CB; --menta:#BDE7D7; --limon:#FBE7A3; --cielo:#C5DDF8;
@@ -75,7 +76,7 @@ p{ margin:0; max-width:58ch; text-wrap:pretty; }
 .cabecera{ position:relative; z-index:40; }
 .cabecera .envoltorio{ display:flex; align-items:center; gap:24px; padding-block:14px; }
 .marca{ text-decoration:none; display:flex; align-items:center; min-height:48px; flex-shrink:0; }
-.logo{ display:block; width:132px; height:auto; overflow:visible; transition:transform .5s var(--ease-muelle); }
+.logo{ display:block; width:150px; height:auto; overflow:visible; transition:transform .5s var(--ease-muelle); }
 .marca:hover .logo{ transform:rotate(-3deg) scale(1.05); }
 .marca:active .logo{ transform:scale(1.08,.92); transition-duration:.09s; }
 .cabecera nav{ margin-left:auto; }
@@ -264,7 +265,7 @@ p{ margin:0; max-width:58ch; text-wrap:pretty; }
 .carrito-cuenta[data-vacio="true"]{ background:color-mix(in oklab, var(--tinta) 10%, transparent); }
 .menu a[aria-current="page"]{ background:var(--tinta); color:var(--papel); }
 @media (max-width: 52rem){ .cabecera .carrito-enlace{ margin-left:auto; padding:0 8px; } .cabecera .carrito-enlace + .boton{ margin-left:0; } .carrito-enlace .txt{ position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); } }
-@media (max-width: 26rem){ .cabecera .boton{ padding:0 1.1em; font-size:.92rem; } .logo{ width:104px; } }
+@media (max-width: 26rem){ .cabecera .boton{ padding:0 1.1em; font-size:.92rem; } .logo{ width:118px; } }
 
 /* Cabecera de página interior */
 .portada{ padding-block:clamp(32px, 6vw, 80px) clamp(24px, 4vw, 48px); }

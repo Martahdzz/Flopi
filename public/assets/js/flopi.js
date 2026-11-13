@@ -36,18 +36,12 @@
   /* ---------- Taller de la portada: vista previa en vivo ---------- */
   const vista = $("#vista");
   if (vista) {
-    const cuerpo = $("#vista-cuerpo"), nombreSvg = $("#vista-nombre"), extra = $("#vista-extra");
-    const estado = { color: "cielo", accesorio: "gorro", nombre: "Lucía" };
+    const cuerpo = $("#vista-cuerpo"), extra = $("#vista-extra");
+    const estado = { color: "cielo", accesorio: "gorro" };
     const rebote = () => {
       if (!window.gsap || reducir.matches) return;
       gsap.fromTo(cuerpo, { scaleX: 1.08, scaleY: 0.9 }, { scaleX: 1, scaleY: 1, duration: 0.7, ease: "elastic.out(1,.4)", transformOrigin: "50% 95%", overwrite: true });
     };
-    $("#nombre").addEventListener("input", (e) => {
-      const limpio = e.target.value.replace(/[^\p{L} ]/gu, "").slice(0, 12);
-      if (limpio !== e.target.value) e.target.value = limpio;
-      estado.nombre = limpio.trim();
-      nombreSvg.textContent = (estado.nombre || "TU NOMBRE").toUpperCase();
-    });
     $$(".muestras").forEach((grupo) => grupo.addEventListener("click", (e) => {
       const b = e.target.closest(".muestra"); if (!b) return;
       $$(".muestra", grupo).forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
@@ -63,7 +57,7 @@
     }));
     $("#taller-form").addEventListener("submit", (e) => {
       e.preventDefault();
-      const q = new URLSearchParams({ color: estado.color, accesorio: estado.accesorio, nombre: estado.nombre });
+      const q = new URLSearchParams({ color: estado.color, accesorio: estado.accesorio });
       location.href = "flopi-pompon.html?" + q;
     });
   }

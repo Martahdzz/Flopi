@@ -14,6 +14,8 @@ await rm(dist, { recursive: true, force: true });
 await cp(new URL("public/", raiz), dist, { recursive: true });
 await mkdir(new URL("assets/vendor/", dist), { recursive: true });
 await mkdir(new URL("assets/img/", dist), { recursive: true });
+await mkdir(new URL("assets/fonts/", dist), { recursive: true });
+await cp(new URL("node_modules/@fontsource/fredoka/files/fredoka-latin-700-normal.woff2", raiz), new URL("assets/fonts/fredoka-700.woff2", dist));
 for (const [desde, a] of [
   ["node_modules/gsap/dist/gsap.min.js", "gsap.min.js"],
   ["node_modules/gsap/dist/ScrollTrigger.min.js", "ScrollTrigger.min.js"],
@@ -53,12 +55,12 @@ const OFERTA = `<div class="oferta hero__cta">
           <p class="oferta__titulo">${esc(pack.nombre)}</p>
           <p class="oferta__precio">${precioPack}</p>
           <div class="oferta__acciones"><a class="boton" href="#pack">Ver el pack</a><a class="enlace" href="munecos.html">Elegir por separado</a></div>
-          <p class="oferta__nota">Cada Flopi lleva el nombre que elijas. Precios de ejemplo.</p>
+          <p class="oferta__nota">Cada Flopi con los colores que elijas. Precios de ejemplo.</p>
         </div>`;
 
 const DESTACADOS = `<section class="destacados" data-fondo="papel" aria-labelledby="titulo-destacados">
     <div class="envoltorio">
-      <div class="destacados__cabeza"><h2 id="titulo-destacados">Tres para empezar</h2><p>Los que más ganas tenemos de ver en casa. Todos cambian de color y llevan su nombre.</p></div>
+      <div class="destacados__cabeza"><h2 id="titulo-destacados">Tres para empezar</h2><p>Los que más ganas tenemos de ver en casa. Todos cambian de color y de accesorio.</p></div>
       <div class="destacados__fila">
 ${destacados.map((slug) => porSlug[slug]).filter(Boolean).map((p) => `        <a class="destacado" href="flopi-${p.slug}.html">
           <div class="destacado__marco" style="--fondo-tarjeta:var(--${p.fondo})"><img src="assets/img/flopi-${p.slug}.svg" alt="${esc(p.nombre)}, muñeco Flopi con ${esc(accesorios[p.accesorio].nombre.toLowerCase())}" width="560" height="660" loading="lazy" decoding="async"></div>
@@ -77,7 +79,7 @@ ${productos.slice(0, 5).map((p, i) => `        <img class="pack__flopi" style="-
         <h2 id="titulo-pack">La pandilla completa</h2>
         <p>${esc(pack.descripcion)}</p>
         <p class="pack__precio">${precioPack}</p>
-        <a class="boton" href="munecos.html">Elegir sus nombres</a>
+        <a class="boton" href="munecos.html">Elegir sus colores</a>
       </div>
       <div class="pack__escenario">
         <h3>${esc(pack.escenario.nombre)}</h3>
@@ -119,8 +121,8 @@ const piezas = {
 let inicio = await readFile(new URL("src/paginas/inicio.html", raiz), "utf8");
 for (const [k, v] of Object.entries(piezas)) inicio = inicio.replace(k, () => v);
 await registrar("index.html", pagina({
-  titulo: "Flopi, muñecos impresos en 3D con su nombre",
-  descripcion: "Diseñamos e imprimimos en 3D un muñeco con el nombre, los colores y el accesorio que elijas.",
+  titulo: "Flopi, muñecos impresos en 3D a tu gusto",
+  descripcion: "Diseñamos e imprimimos en 3D un muñeco con los colores y el accesorio que elijas.",
   cabezaExtra: `<script type="application/ld+json">${JSON.stringify(faqLD).replace(/</g, "\\u003c")}</script>`,
   cuerpo: inicio,
 }));
@@ -128,7 +130,7 @@ await registrar("index.html", pagina({
 if (typeof paginaHuevos === "function") {
   await registrar("huevos.html", pagina({
     titulo: "Huevos sorpresa Flopi",
-    descripcion: "Abre un huevo sorpresa y descubre qué Flopi sale de dentro. Después le pones su nombre.",
+    descripcion: "Abre un huevo sorpresa y descubre qué Flopi sale de dentro. Tú eliges el color del huevo.",
     activo: "huevos",
     cuerpo: paginaHuevos(datos),
   }));
@@ -137,13 +139,13 @@ if (typeof paginaHuevos === "function") {
 // ---- Catálogo ----
 await registrar("munecos.html", pagina({
   titulo: "Muñecos Flopi",
-  descripcion: "Conoce a la pandilla Flopi: cinco personajes que puedes personalizar con nombre y colores.",
+  descripcion: "Conoce a la pandilla Flopi: cinco personajes que puedes personalizar con colores y accesorios.",
   activo: "munecos",
   cuerpo: `<section class="portada" data-fondo="papel">
   <div class="envoltorio">
     <ol class="miga"><li><a href="index.html">Inicio</a></li><li>Muñecos</li></ol>
     <h1>La pandilla al completo</h1>
-    <p>Elige un personaje y hazlo suyo: color, pelo, accesorio y su nombre en la peana.</p>
+    <p>Elige un personaje y hazlo suyo: color del cuerpo, pelo y accesorio.</p>
   </div>
 </section>
 <section class="pandilla pandilla--catalogo" data-fondo="papel" aria-label="Personajes">
@@ -172,7 +174,7 @@ for (const p of productos) {
   };
   await registrar(`flopi-${p.slug}.html`, pagina({
     titulo: `Flopi ${p.nombre} personalizado`,
-    descripcion: `${p.frase} Muñeco impreso en 3D con su nombre. ${euros(p.precio)} con IVA.`,
+    descripcion: `${p.frase} Muñeco impreso en 3D a tu gusto. ${euros(p.precio)} con IVA.`,
     activo: "munecos",
     fondo: "papel",
     cabezaExtra: `<script type="application/ld+json">${JSON.stringify(jsonld)}</script>
@@ -208,7 +210,7 @@ for (const p of productos) {
       <p class="aviso-edad"><b>3+</b> No apto para menores de 3 años: contiene piezas pequeñas. <span class="por-confirmar">por confirmar</span></p>
       <ul class="garantias">
         <li>${ICON.check}<span>Envío gratis desde 35 €.</span></li>
-        <li>${ICON.check}<span>Al ser personalizado no admite desistimiento; si llega con un defecto, lo reponemos. <a href="envios.html">Ver condiciones</a></span></li>
+        <li>${ICON.check}<span>Devoluciones: pendiente de confirmar. Si llega con un defecto, lo reponemos. <a href="envios.html">Ver condiciones</a></span></li>
       </ul>
     </div>
   </div>
@@ -295,7 +297,7 @@ await texto("seguridad.html", "seguridad", "Seguridad y materiales de Flopi", "S
 <h2>Edad recomendada</h2>
 <p>Flopi no es apto para menores de 3 años porque contiene piezas pequeñas que podrían desprenderse. Pendiente de decidir si se comercializa como juguete (con marcado CE y ensayos EN 71) o como figura decorativa.</p>
 <h2>Materiales</h2>
-<ul><li>Cuerpo impreso en PLA, un plástico de origen vegetal.</li><li>Pintura al agua y barniz mate.</li><li>Peana con el nombre grabado.</li></ul>
+<ul><li>Cuerpo impreso en PLA, un plástico de origen vegetal.</li><li>Pintura al agua y barniz mate.</li><li>Peana a juego.</li></ul>
 <p>Pendiente: fichas de seguridad de cada material y comprobación de migración de elementos (EN 71-3) y REACH.</p>
 <h2>Cuidados</h2>
 <ul><li>Limpiar con un paño húmedo.</li><li>No dejar al sol ni cerca de fuentes de calor: el PLA se deforma a partir de unos 55 °C.</li><li>Si una pieza se rompe, retirarla del alcance de los niños pequeños.</li></ul>
@@ -309,7 +311,7 @@ await texto("envios.html", "envios", "Envíos y devoluciones de Flopi", "Envíos
 <h2>Precio del envío</h2>
 <p>4,90 € por pedido. Gratis a partir de 35 €.</p>
 <h2>Devoluciones</h2>
-<p>Como cada Flopi lleva un nombre y unos colores elegidos por ti, no admite el derecho de desistimiento de 14 días (art. 103 c del TRLGDCU). Te lo recordamos antes de pagar.</p>
+<p>Pendiente de confirmar con un profesional: al no llevar nombre grabado y elegirse los colores de un catálogo, lo normal es que se aplique el derecho de desistimiento de 14 días (la excepción del art. 103 c del TRLGDCU es para productos claramente personalizados).</p>
 <p>Si llega roto o con un defecto de fabricación, escríbenos con una foto en los 30 días siguientes y lo reponemos sin coste. Se mantiene la garantía legal de conformidad.</p>`);
 
 await texto("aviso-legal.html", "", "Aviso legal de Flopi", "Aviso legal",
@@ -324,9 +326,9 @@ await texto("aviso-legal.html", "", "Aviso legal de Flopi", "Aviso legal",
 await texto("privacidad.html", "", "Privacidad en Flopi", "Privacidad",
   "Qué datos pedimos, para qué y cuánto tiempo los guardamos.", `
 <h2>Qué datos tratamos</h2>
-<ul><li>Datos de envío y contacto de quien compra.</li><li>El nombre que se graba en el muñeco, que puede ser el de un menor: solo se usa para fabricar el pedido.</li></ul>
+<ul><li>Datos de envío y contacto de quien compra.</li></ul>
 <h2>Cuánto tiempo</h2>
-<p>Pendiente: plazos de conservación (por ejemplo, el nombre grabado se borra al cerrar el pedido; la facturación, el plazo que exija la ley).</p>
+<p>Pendiente: plazos de conservación (por ejemplo, la facturación, el plazo que exija la ley).</p>
 <h2>Cookies</h2>
 <p>Esta versión de prueba no usa cookies. Guarda en tu navegador el carrito y la paleta elegida (localStorage), que no salen de tu dispositivo.</p>
 <h2>Tus derechos</h2>

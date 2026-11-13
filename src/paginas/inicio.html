@@ -65,7 +65,7 @@
           <span class="hero__linea hero__linea--sangra"><span>hecho</span></span>
           <span class="hero__linea"><span>muñeco.</span></span>
         </h1>
-        <p class="hero__lead">Diseñamos e imprimimos en 3D un muñeco con su nombre, sus colores y su gorro favorito.</p>
+        <p class="hero__lead">Diseñamos e imprimimos en 3D un muñeco con sus colores y su gorro favorito.</p>
         {{OFERTA}}
       </div>
       <div class="hero__flopi">
@@ -73,7 +73,7 @@
           <g class="flopi__cuerpo">
             <ellipse cx="120" cy="290" rx="78" ry="8" fill="var(--tinta)" fill-opacity=".14"/>
             <rect x="44" y="256" width="152" height="30" rx="15" fill="var(--c-peana)"/>
-            <text x="120" y="277" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="17" fill="var(--papel)">LUCÍA</text>
+            
             <ellipse cx="58" cy="208" rx="15" ry="27" transform="rotate(18 58 208)" fill="var(--c-cuerpo)"/>
             <ellipse cx="182" cy="208" rx="15" ry="27" transform="rotate(-18 182 208)" fill="var(--c-cuerpo)"/>
             <path d="M58 260 C50 196 72 150 120 150 C168 150 190 196 182 260 Z" fill="var(--c-cuerpo)"/>
@@ -102,7 +102,7 @@
     <div class="envoltorio">
       <div class="pandilla__cabeza">
         <h2 id="titulo-pandilla">La pandilla</h2>
-        <p>Cinco personajes para empezar. Todos cambian de color y llevan el nombre que elijas. <a href="munecos.html">Ver todos</a></p>
+        <p>Cinco personajes para empezar. Todos cambian de color y de accesorio. <a href="munecos.html">Ver todos</a></p>
       </div>
       <div class="rejilla">
 {{PANDILLA}}
@@ -138,7 +138,7 @@
     <div class="envoltorio">
       <ul class="confianza__lista">
         <li><svg viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="16" cy="11" r="6"/><path d="M6 28c1.5-6 5.5-9 10-9s8.5 3 10 9"/><path d="M24 5l2 2 4-4"/></svg><span>Eliges personaje a personaje</span></li>
-        <li><svg viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="18" width="24" height="9" rx="4.5"/><path d="M10 22.5h12"/><path d="M16 4c-4 0-6 3-6 6s2 5 6 8c4-3 6-5 6-8s-2-6-6-6z"/></svg><span>Con su nombre en la peana</span></li>
+        <li><svg viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="18" width="24" height="9" rx="4.5"/><path d="M10 22.5h12"/><path d="M16 4c-4 0-6 3-6 6s2 5 6 8c4-3 6-5 6-8s-2-6-6-6z"/></svg><span>Colores a su gusto</span></li>
         <li><svg viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 27h22"/><path d="M8 27V13l8-6 8 6v14"/><path d="M13 27v-7h6v7"/></svg><span>Hecho en nuestro taller</span></li>
       </ul>
     </div>
@@ -152,18 +152,12 @@
         <svg id="vista" viewBox="-20 -30 280 330" role="img" aria-label="Vista previa de tu Flopi" style="--c-cuerpo:var(--cielo);--c-pelo:var(--tinta);--c-extra:var(--chicle);--c-peana:var(--tinta)">
           <g id="vista-cuerpo">
             <use width="240" height="300" href="#flopi"/>
-            <text id="vista-nombre" x="120" y="277" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="17" fill="var(--papel)">LUCÍA</text>
             <use id="vista-extra" width="240" height="300" href="#extra-gorro"/>
           </g>
         </svg>
       </div>
       <form class="taller__panel" id="taller-form" novalidate>
         <h2 id="titulo-taller">Hazlo suyo</h2>
-        <div class="campo">
-          <label for="nombre">Su nombre</label>
-          <input type="text" id="nombre" name="nombre" value="Lucía" maxlength="12" autocomplete="off" aria-describedby="nombre-ayuda">
-          <small id="nombre-ayuda">Hasta 12 letras. Va grabado en la peana.</small>
-        </div>
         <fieldset class="campo">
           <legend>Color del cuerpo</legend>
           <div class="muestras" data-grupo="cuerpo">
@@ -234,7 +228,7 @@
   <section class="final" data-fondo="cielo" aria-labelledby="titulo-final">
     <div class="envoltorio">
       <h2 id="titulo-final">Lo difícil será elegir solo uno</h2>
-      <p>Elige personaje, ponle su nombre y nosotros nos encargamos del resto.</p>
+      <p>Elige personaje y colores, y nosotros nos encargamos del resto.</p>
       <a class="boton" href="munecos.html">Crea tu Flopi</a>
     </div>
   </section>

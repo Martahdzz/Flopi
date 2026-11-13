@@ -1,5 +1,5 @@
 // Huevos sorpresa: un huevo impreso en 3D (dos mitades que encajan) con un mini Flopi dentro.
-// El comprador elige el color del huevo y el nombre de la peana; el personaje que sale es sorpresa.
+// El comprador elige el color del huevo; el personaje que sale es sorpresa.
 // Exporta seccionHuevos(datos) para la portada y paginaHuevos(datos) para huevos.html.
 import { flopiSVG, huevoSVG } from "../flopi-svg.mjs";
 import { euros, esc } from "../plantilla.mjs";
@@ -52,7 +52,7 @@ export function seccionHuevos(datos) {
   <div class="envoltorio">
     <div class="huevos__texto">
       <h2 id="titulo-huevos">¿Quién saldrá del huevo?</h2>
-      <p class="huevos__frase">Eliges el color y el nombre. El Flopi de dentro es sorpresa.</p>
+      <p class="huevos__frase">Eliges el color. El Flopi de dentro es sorpresa.</p>
       <p class="huevos__precio">${euros(HUEVO.precio)} ${PRECIO_EJEMPLO}</p>
       <a class="boton" href="huevos.html">Ver los huevos</a>
     </div>
@@ -93,7 +93,7 @@ export function paginaHuevos(datos) {
       <li aria-current="page">Huevos sorpresa</li>
     </ol>
     <h1>Un huevo, un Flopi sorpresa</h1>
-    <p>Un huevo impreso en 3D, en dos mitades que encajan. Dentro hay un mini Flopi de la pandilla. Tú eliges el color del huevo y el nombre; quién sale, lo descubrís al abrirlo.</p>
+    <p>Un huevo impreso en 3D, en dos mitades que encajan. Dentro hay un mini Flopi de la pandilla. Tú eliges el color del huevo; quién sale, lo descubrís al abrirlo.</p>
   </div>
 </section>
 
@@ -101,7 +101,6 @@ export function paginaHuevos(datos) {
   <div class="envoltorio">
     <div class="huevo-taller__vista" id="huevo-vista" style="--huevo-color:${hex(datos, inicial)}">
       <span class="huevo__caja">${huevoSVG({ color: hex(datos, inicial), id: "hv-vista" })}</span>
-      <span class="etiqueta-nombre huevo-taller__nombre" id="huevo-etiqueta">TU NOMBRE</span>
     </div>
     <form class="huevo-taller__panel" id="huevo-form" data-precio="${HUEVO.precio}" novalidate>
       <h2 id="titulo-huevo-taller">Prepara tu huevo</h2>
@@ -109,17 +108,11 @@ export function paginaHuevos(datos) {
         <legend>Color del huevo</legend>
         <div class="muestras" data-grupo="color">${muestras}</div>
       </fieldset>
-      <div class="campo">
-        <label for="huevo-nombre">Nombre para la peana</label>
-        <input type="text" id="huevo-nombre" name="nombre" maxlength="${HUEVO.maxNombre}" autocomplete="off" spellcheck="false" aria-describedby="huevo-nombre-ayuda" placeholder="Lucía">
-        <small id="huevo-nombre-ayuda">Hasta ${HUEVO.maxNombre} letras. Solo letras y espacios.</small>
-      </div>
       <p class="huevo-taller__precio">${euros(HUEVO.precio)} <small>IVA incluido</small> ${PRECIO_EJEMPLO}</p>
       <button type="submit" class="boton">Añadir al carrito (${euros(HUEVO.precio)})</button>
       <p class="aviso-maqueta" id="huevo-aviso" aria-live="polite"></p>
       <ul class="huevo-taller__datos">
-        <li>Lo fabricamos en 5 días laborables; el envío tarda 48 h en península. <span class="por-confirmar">Por confirmar</span></li>
-        <li>Al llevar nombre, no admite desistimiento. Si llega con un defecto, lo reponemos. <a href="envios.html">Envíos y devoluciones</a></li>
+        <li>Devoluciones: pendiente de confirmar. Si llega con un defecto, lo reponemos. <a href="envios.html">Envíos y devoluciones</a></li>
       </ul>
       <p class="aviso-edad huevos-aviso"><b>+3</b><span>No apto para menores de 3 años: el huevo y la figura tienen piezas pequeñas. <span class="por-confirmar">Por confirmar</span></span></p>
     </form>
@@ -130,7 +123,7 @@ export function paginaHuevos(datos) {
   <div class="envoltorio">
     <h2 id="titulo-huevo-pasos">Cómo funciona</h2>
     <ol class="huevo-pasos__lista">
-      <li class="huevo-paso"><h3>Eliges color y nombre</h3><p>El color de las dos mitades del huevo y el nombre que irá en la peana del mini Flopi.</p></li>
+      <li class="huevo-paso"><h3>Eliges el color</h3><p>El color de las dos mitades del huevo.</p></li>
       <li class="huevo-paso"><h3>Lo imprimimos</h3><p>Imprimimos el huevo y la figura capa a capa en nuestro taller y metemos el Flopi dentro.</p></li>
       <li class="huevo-paso"><h3>Al abrirlo, descubrís quién es</h3><p>Se separan las dos mitades y aparece uno de los cinco personajes de la pandilla.</p></li>
     </ol>

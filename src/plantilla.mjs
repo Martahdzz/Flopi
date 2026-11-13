@@ -11,19 +11,34 @@ const MENU = [
   ["envios.html", "Envíos", "envios"],
 ];
 
-// Logotipo FLOPi: letras gordas de colores con contorno marino y borde amarillo (recreación en SVG del logo de la marca).
+// Logotipo FLOPi (recreación en SVG del logo de la marca): letras gordas redondeadas de colores,
+// contorno azul marino, borde exterior amarillo y trazos amarillos a los lados.
+// Fuente Fredoka 700 servida desde la propia web (assets/fonts), sin depender de Google Fonts.
 export function logoSVG({ clase = "logo", id = "logo" } = {}) {
-  const letras = [["F", "#FFFFFF", -6, 0], ["L", "#FFD60A", 4, 3], ["O", "#4FC3F7", -3, 0], ["P", "#8CD63A", 5, 2], ["i", "#FF5CA8", -4, -1]];
-  const x = [12, 66, 112, 172, 222];
-  const capa = (estilo, conColor) => letras.map(([l, c, r, dy], i) =>
-    `<text x="${x[i]}" y="${82 + dy}" transform="rotate(${r} ${x[i] + 24} ${60 + dy})" ${conColor ? `fill="${c}"` : ""} ${estilo}>${l}</text>`).join("");
-  const base = 'font-family="Lilita One, Arial Rounded MT Bold, Trebuchet MS, sans-serif" font-size="86" stroke-linejoin="round"';
-  return `<svg class="${clase}" viewBox="0 0 270 110" role="img" aria-labelledby="${id}-t"><title id="${id}-t">Flopi</title>
-  <g ${base}>
-    <g fill="#FFD60A" stroke="#FFD60A" stroke-width="26">${capa("", false)}</g>
-    <g fill="#0E3A6B" stroke="#0E3A6B" stroke-width="13">${capa("", false)}</g>
-    <g stroke="#0E3A6B" stroke-width="2">${capa("", true)}</g>
-    <g fill="#FFFFFF" fill-opacity=".45">${letras.map(([l, , r, dy], i) => `<ellipse cx="${x[i] + 16}" cy="${36 + dy}" rx="7" ry="4" transform="rotate(${r - 20} ${x[i] + 16} ${36 + dy})"/>`).join("")}</g>
+  // [letra, color, x, rotación, desplazamiento vertical]
+  const letras = [
+    ["F", "#FFFFFF", 22, -9, 2],
+    ["L", "#FFD400", 82, 5, 8],
+    ["O", "#2BB8F0", 132, -3, 0],
+    ["P", "#7CCB2B", 210, 4, -2],
+    ["i", "#FF4FA3", 268, 9, -6],
+  ];
+  const capa = (atributos, color) => letras.map(([l, c, x, r, dy]) =>
+    `<text x="${x}" y="${112 + dy}" transform="rotate(${r} ${x + 26} ${70 + dy})"${color ? ` fill="${c}"` : ""} ${atributos}>${l}</text>`).join("");
+  const fuente = 'font-family="Fredoka Flopi, Fredoka, Arial Rounded MT Bold, sans-serif" font-weight="700" font-size="112" stroke-linejoin="round" paint-order="stroke"';
+  const trazo = (d) => `<path d="${d}" fill="none" stroke="#0E2F6B" stroke-width="13" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#FFD400" stroke-width="7" stroke-linecap="round"/>`;
+  return `<svg class="${clase}" viewBox="0 0 340 150" role="img" aria-labelledby="${id}-t"><title id="${id}-t">Flopi</title>
+  ${trazo("M14 46 L2 36")}${trazo("M10 72 L-2 72")}${trazo("M16 98 L4 108")}
+  ${trazo("M326 40 L338 30")}${trazo("M330 66 L342 66")}${trazo("M324 92 L336 102")}
+  <g ${fuente}>
+    <g fill="#FFD400" stroke="#FFD400" stroke-width="34">${capa("")}</g>
+    <g fill="#0E2F6B" stroke="#0E2F6B" stroke-width="18">${capa("")}</g>
+    <g>${capa("", true)}</g>
+  </g>
+  <g fill="#FFFFFF" fill-opacity=".55">
+    <ellipse cx="44" cy="40" rx="9" ry="5" transform="rotate(-25 44 40)"/>
+    <ellipse cx="160" cy="44" rx="10" ry="5" transform="rotate(-25 160 44)"/>
+    <ellipse cx="234" cy="40" rx="9" ry="5" transform="rotate(-20 234 40)"/>
   </g>
 </svg>`;
 }
