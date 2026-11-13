@@ -1,0 +1,676 @@
+<!doctype html>
+<html lang="es" data-paleta="pastel">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flopi Maqueta</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Maqueta de la web de Flopi: muñecos personalizados impresos en 3D.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Nunito:wght@400;600;800&display=swap">
+<style>
+/* Layout: página-juguete asimétrica en 12 columnas; un momento firma (Flopi impreso capa a capa, sección fijada); el fondo cambia de color por sección. */
+:root, :root[data-paleta="pastel"]{
+  --papel:#FFF8F1; --tinta:#2E2A3A; --chicle:#F7B9CB; --menta:#BDE7D7; --limon:#FBE7A3; --cielo:#C5DDF8;
+  --piel:#FFE3CF; --mezcla:42%;
+}
+:root[data-paleta="juguete"]{
+  --papel:#FFF6E5; --tinta:#1C1B29; --chicle:#FF7A8A; --menta:#2CC9A9; --limon:#FFC83D; --cielo:#5B95FF;
+  --piel:#FFD9BF; --mezcla:30%;
+}
+:root[data-paleta="bosque"]{
+  --papel:#F3F1E7; --tinta:#1F2A24; --chicle:#EFA8A0; --menta:#7DB394; --limon:#EFD06F; --cielo:#93BCCD;
+  --piel:#F6DCC6; --mezcla:38%;
+}
+:root{
+  color-scheme: light;
+  --suave: color-mix(in oklab, var(--tinta) 62%, var(--papel));
+  --f-display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --f-texto: "Nunito", "Segoe UI", system-ui, sans-serif;
+  --t-mega: clamp(3.4rem, 10.5vw, 10rem);
+  --t-1: clamp(2.3rem, 5.4vw, 4.6rem);
+  --t-2: clamp(1.35rem, 2.4vw, 1.9rem);
+  --t-texto: clamp(1.02rem, .96rem + .3vw, 1.18rem);
+  --t-chico: .92rem;
+  --gutter: max(20px, env(safe-area-inset-left, 0px));
+  --gutter-d: max(20px, env(safe-area-inset-right, 0px));
+  --ancho: 82rem;
+  --gap: clamp(16px, 2.4vw, 32px);
+  --ease-salida: cubic-bezier(.16,1,.3,1);
+  --ease-cine: cubic-bezier(.77,0,.175,1);
+  --ease-muelle: linear(0, .5 7%, 1.1 18%, .95 30%, 1.02 45%, 1);
+}
+*,*::before,*::after{ box-sizing:border-box; }
+html,body{ overflow-x:clip; }
+body{
+  margin:0; background:var(--papel); color:var(--tinta);
+  font:400 var(--t-texto)/1.6 var(--f-texto);
+  transition: background-color .7s var(--ease-salida);
+  -webkit-font-smoothing:antialiased;
+}
+body[data-fondo="menta"]{ background: color-mix(in oklab, var(--menta) var(--mezcla), var(--papel)); }
+body[data-fondo="chicle"]{ background: color-mix(in oklab, var(--chicle) var(--mezcla), var(--papel)); }
+body[data-fondo="limon"]{ background: color-mix(in oklab, var(--limon) var(--mezcla), var(--papel)); }
+body[data-fondo="cielo"]{ background: color-mix(in oklab, var(--cielo) var(--mezcla), var(--papel)); }
+body::after{ /* grano de papel: una sola textura, nunca animada */
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:60; opacity:.06;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 9 -4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+::selection{ background:var(--limon); color:var(--tinta); }
+:focus-visible{ outline:3px solid var(--tinta); outline-offset:3px; border-radius:14px; }
+a{ color:inherit; text-underline-offset:.22em; text-decoration-thickness:2px; }
+img,svg{ max-width:100%; }
+h1,h2,h3{ font-family:var(--f-display); font-weight:800; line-height:.95; letter-spacing:-.025em; margin:0; text-wrap:balance; }
+p{ margin:0; max-width:58ch; text-wrap:pretty; }
+.envoltorio{ max-width:var(--ancho); margin-inline:auto; padding-left:var(--gutter); padding-right:var(--gutter-d); }
+
+/* Botones: uno principal en toda la web */
+.boton{
+  display:inline-flex; align-items:center; justify-content:center; gap:.5em;
+  min-height:56px; padding:0 1.6em; border:0; border-radius:999px; cursor:pointer;
+  font:800 1.05rem/1 var(--f-texto); text-decoration:none;
+  background:var(--tinta); color:var(--papel);
+  box-shadow: 0 6px 0 -1px color-mix(in oklab, var(--tinta) 30%, var(--chicle));
+  transition: transform .5s var(--ease-muelle), box-shadow .3s var(--ease-salida);
+}
+.boton:hover{ transform:translateY(-2px) scale(1.03); }
+.boton:active{ transform:translateY(3px) scale(1.06,.9); box-shadow:0 2px 0 -1px color-mix(in oklab, var(--tinta) 30%, var(--chicle)); transition-duration:.09s; }
+.enlace{ font-weight:800; min-height:48px; display:inline-flex; align-items:center; }
+
+/* Cabecera */
+.cabecera{ position:relative; z-index:40; }
+.cabecera .envoltorio{ display:flex; align-items:center; gap:24px; padding-block:14px; }
+.marca{ font:800 2rem/1 var(--f-display); letter-spacing:-.04em; text-decoration:none; display:flex; align-items:center; gap:.3rem; min-height:48px; }
+.marca svg{ width:34px; height:34px; }
+.menu{ display:flex; gap:6px; margin-left:auto; list-style:none; padding:0; margin-block:0; }
+.menu a{ display:inline-flex; align-items:center; min-height:48px; padding:0 14px; border-radius:999px; font-weight:700; text-decoration:none; }
+.menu a:hover{ background:color-mix(in oklab, var(--tinta) 8%, transparent); }
+.cabecera .boton{ min-height:48px; font-size:.98rem; }
+.etiqueta-maqueta{ position:fixed; z-index:50; bottom:calc(env(safe-area-inset-bottom,0px) + 18px); right:calc(env(safe-area-inset-right,0px) + 12px); margin:0;
+  font:700 .78rem/1 var(--f-texto); background:var(--limon); color:var(--tinta); padding:7px 11px; border-radius:999px; transform:rotate(4deg); }
+@media (max-width: 52rem){ .menu{ display:none; } .cabecera .boton{ margin-left:auto; } }
+
+/* Hero */
+.hero{ position:relative; padding-block: clamp(24px, 5vw, 64px) clamp(56px, 9vw, 120px); isolation:isolate; }
+.hero .envoltorio{ display:grid; grid-template-columns:repeat(12, minmax(0,1fr)); gap:var(--gap); align-items:end; }
+.hero__texto{ grid-column:1 / 8; grid-row:1; position:relative; z-index:2; display:grid; gap:28px; padding-bottom:4vh; }
+.hero h1{ font-size:var(--t-mega); }
+.hero__linea{ display:block; overflow:clip; padding-bottom:.06em; }
+.hero__linea > span{ display:inline-block; }
+.hero__linea--sangra{ padding-left:.9em; }
+.hero__lead{ font-size:clamp(1.1rem, 1rem + .5vw, 1.35rem); max-width:34ch; }
+.hero__acciones{ display:flex; flex-wrap:wrap; gap:12px 22px; align-items:center; }
+.hero__datos{ display:flex; flex-wrap:wrap; gap:8px 22px; font-size:var(--t-chico); color:var(--suave); list-style:none; padding:0; margin:0; font-weight:600; }
+.hero__flopi{ grid-column:7 / 13; grid-row:1; position:relative; z-index:1; margin-left:-4vw; margin-bottom:-4vh; justify-self:center; width:min(100%, 62svh); }
+.hero__flopi svg{ width:100%; height:auto; display:block; overflow:visible; }
+.forma{ position:absolute; z-index:-1; pointer-events:none; }
+.forma--a{ width:min(46vw, 620px); aspect-ratio:1; right:-6vw; top:4vh; background:var(--chicle); border-radius:62% 38% 46% 54% / 55% 44% 56% 45%; }
+.forma--b{ width:min(22vw, 260px); aspect-ratio:1; left:46%; bottom:6vh; background:var(--limon); border-radius:42% 58% 63% 37% / 41% 44% 56% 59%; }
+.forma--c{ width:110px; aspect-ratio:1; left:-30px; top:30%; background:var(--cielo); border-radius:50%; }
+@media (max-width: 48rem){
+  .hero__texto{ grid-column:1 / -1; grid-row:auto; padding-bottom:0; }
+  .hero__flopi{ grid-column:2 / -2; grid-row:auto; margin:0; width:100%; max-width:340px; }
+  .forma--a{ width:90vw; top:auto; bottom:4vh; right:-25vw; }
+  .forma--b{ left:4vw; bottom:28vh; }
+}
+
+/* Capa a capa (momento firma) */
+.capas{ position:relative; }
+.capas__pin{ min-height:100svh; display:grid; align-items:center; padding-block:clamp(48px, 8vw, 96px); }
+.capas .envoltorio{ display:grid; grid-template-columns:repeat(12, minmax(0,1fr)); gap:var(--gap); align-items:center; }
+.capas__texto{ grid-column:1 / 6; display:grid; gap:28px; }
+.capas h2{ font-size:var(--t-1); }
+.pasos{ list-style:none; padding:0; margin:0; display:grid; gap:20px; counter-reset:paso; }
+.paso{ display:grid; grid-template-columns:56px 1fr; gap:4px 16px; align-items:start; counter-increment:paso; }
+.paso::before{ content:counter(paso); grid-row:span 2; width:56px; height:56px; display:grid; place-items:center;
+  font:800 1.5rem/1 var(--f-display); background:var(--papel); border-radius:46% 54% 52% 48% / 55% 45% 55% 45%; }
+.paso h3{ font-size:var(--t-2); line-height:1.1; letter-spacing:-.01em; }
+.paso p{ color:var(--suave); font-weight:600; }
+.capas__escenario{ grid-column:6 / 13; position:relative; aspect-ratio: 4 / 5; max-height:78svh; justify-self:center; width:100%; max-width:560px; }
+.capas__escenario svg{ position:absolute; inset:0; width:100%; height:100%; }
+.capas__fantasma{ opacity:.55; }
+.capas__boquilla{ position:absolute; left:-4%; right:-4%; bottom:0; height:0; pointer-events:none; opacity:0; }
+.capas__boquilla::before{ content:""; position:absolute; left:0; right:0; top:-2px; height:4px; border-radius:4px; background:var(--tinta); }
+.capas__boquilla::after{ content:""; position:absolute; left:50%; top:-26px; width:34px; height:24px; translate:-50% 0;
+  background:var(--tinta); clip-path:polygon(0 0,100% 0,70% 100%,30% 100%); border-radius:4px; }
+.capas__medida{ font:700 var(--t-chico)/1.3 var(--f-texto); color:var(--suave); }
+@media (max-width: 48rem){
+  .capas__texto, .capas__escenario{ grid-column:1 / -1; }
+  .capas__escenario{ order:-1; max-width:380px; }
+}
+
+/* La pandilla: tarjetas de tamaños distintos */
+.pandilla{ padding-block:clamp(72px, 12vw, 160px); }
+.pandilla__cabeza{ display:flex; flex-wrap:wrap; align-items:end; justify-content:space-between; gap:16px 40px; margin-bottom:clamp(32px, 6vw, 72px); }
+.pandilla h2{ font-size:var(--t-1); }
+.rejilla{ display:grid; grid-template-columns:repeat(12, minmax(0,1fr)); gap:var(--gap); align-items:start; }
+.tarjeta{ display:grid; gap:12px; text-decoration:none; }
+.tarjeta:nth-child(1){ grid-column:1 / 6; }
+.tarjeta:nth-child(2){ grid-column:7 / 11; margin-top:18vh; }
+.tarjeta:nth-child(3){ grid-column:2 / 5; margin-top:-6vh; }
+.tarjeta:nth-child(4){ grid-column:6 / 10; margin-top:4vh; }
+.tarjeta:nth-child(5){ grid-column:10 / 13; margin-top:12vh; }
+.tarjeta__marco{ position:relative; overflow:clip; border-radius:28px; background:var(--fondo-tarjeta, var(--cielo)); aspect-ratio:4 / 5; }
+.tarjeta:nth-child(odd) .tarjeta__marco{ border-radius:120px 28px 28px 28px; }
+.tarjeta:nth-child(3) .tarjeta__marco{ aspect-ratio:1; border-radius:50%; }
+.tarjeta:nth-child(3) .tarjeta__marco svg{ inset:14% 20% 0; width:60%; height:86%; }
+.tarjeta__marco::after{ content:""; position:absolute; inset:0; pointer-events:none;
+  background:repeating-linear-gradient(0deg, transparent 0 7px, color-mix(in oklab, var(--tinta) 7%, transparent) 7px 8px); }
+.tarjeta__marco svg{ position:absolute; inset:8% 10% 0; width:80%; height:92%; transition:transform .6s var(--ease-salida); }
+.tarjeta:hover .tarjeta__marco svg{ transform:translateY(-6px) rotate(-2deg); }
+.tarjeta__pie{ display:flex; justify-content:space-between; gap:12px; align-items:baseline; }
+.tarjeta__nombre{ font:800 var(--t-2)/1.1 var(--f-display); }
+.tarjeta__precio{ font-weight:800; font-variant-numeric:tabular-nums; }
+.hueco-foto{ position:absolute; left:12px; bottom:12px; font:700 .75rem/1 var(--f-texto); background:var(--papel); padding:6px 10px; border-radius:999px; opacity:.85; }
+@media (max-width: 48rem){
+  .tarjeta:nth-child(n){ grid-column:1 / -1; margin-top:0; }
+  .tarjeta:nth-child(even){ grid-column:4 / -1; }
+  .tarjeta:nth-child(odd){ grid-column:1 / 10; }
+}
+
+/* Frase con barrido */
+.frase{ padding-block:clamp(80px, 16vw, 200px); }
+.frase h2{ font-size:var(--t-mega); max-width:12ch; }
+.frase h2 span{ display:block; }
+.frase h2 span:nth-child(2){ padding-left:clamp(24px, 14vw, 220px); }
+.frase__firma{ display:block; margin-top:28px; width:min(380px, 70%); color:var(--tinta); }
+
+/* Taller (personaliza) */
+.taller{ padding-block:clamp(64px, 10vw, 140px); }
+.taller .envoltorio{ display:grid; grid-template-columns:repeat(12, minmax(0,1fr)); gap:var(--gap); align-items:center; }
+.taller__vista{ grid-column:1 / 7; position:relative; aspect-ratio:1; max-width:560px; width:100%; justify-self:center; }
+.taller__vista::before{ content:""; position:absolute; inset:6%; z-index:-1; background:var(--papel);
+  border-radius:58% 42% 51% 49% / 46% 56% 44% 54%; }
+.taller__vista svg{ width:100%; height:100%; display:block; overflow:visible; }
+.taller__panel{ grid-column:8 / 13; display:grid; gap:28px; }
+.taller h2{ font-size:var(--t-1); }
+.campo{ display:grid; gap:10px; border:0; padding:0; margin:0; min-width:0; }
+.campo legend, .campo label{ font-weight:800; padding:0; }
+.campo input[type=text]{ min-height:56px; border-radius:16px; border:2px solid var(--tinta); background:var(--papel); color:var(--tinta);
+  font:700 1.15rem/1 var(--f-texto); padding:0 18px; width:100%; max-width:22rem; }
+.muestras{ display:flex; flex-wrap:wrap; gap:10px; }
+.muestra{ min-width:48px; min-height:48px; border-radius:999px; border:2px solid var(--tinta); cursor:pointer;
+  display:inline-flex; align-items:center; gap:8px; padding:0 14px 0 8px; font:700 .95rem/1 var(--f-texto);
+  background:var(--papel); color:var(--tinta); transition:transform .4s var(--ease-muelle); }
+.muestra::before{ content:""; width:28px; height:28px; border-radius:50%; background:var(--muestra); box-shadow:inset 0 0 0 2px color-mix(in oklab, var(--tinta) 20%, transparent); }
+.muestra[aria-pressed="true"]{ background:var(--tinta); color:var(--papel); }
+.muestra:active{ transform:scale(.94); }
+.aviso-maqueta{ min-height:1.6em; font-weight:700; color:var(--suave); }
+@media (max-width: 48rem){ .taller__vista, .taller__panel{ grid-column:1 / -1; } }
+
+/* Para padres */
+.padres{ padding-block:clamp(72px, 12vw, 160px); }
+.padres .envoltorio{ display:grid; grid-template-columns:repeat(12, minmax(0,1fr)); gap:var(--gap); }
+.padres h2{ grid-column:1 / 6; font-size:var(--t-1); align-self:start; position:sticky; top:110px; }
+.respuestas{ grid-column:7 / 13; margin:0; display:grid; }
+.respuesta{ padding-block:24px; display:grid; gap:6px; }
+.respuesta + .respuesta{ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 10' preserveAspectRatio='none'%3E%3Cpath d='M2 6 Q60 2 120 5 T240 5 T398 4' fill='none' stroke='%23000' stroke-opacity='.35' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") top / 100% 10px no-repeat; }
+.respuesta dt{ font:800 var(--t-2)/1.15 var(--f-display); }
+.respuesta dd{ margin:0; max-width:46ch; }
+.por-confirmar{ font-size:.8rem; font-weight:800; background:var(--limon); padding:2px 8px; border-radius:999px; white-space:nowrap; }
+@media (max-width: 48rem){ .padres h2, .respuestas{ grid-column:1 / -1; } .padres h2{ position:static; } }
+
+/* Pie */
+.pie{ padding-block:clamp(56px, 8vw, 96px) calc(40px + env(safe-area-inset-bottom, 0px)); overflow:clip; }
+.pie__marca{ font:800 clamp(6rem, 30vw, 26rem)/.8 var(--f-display); letter-spacing:-.06em; margin:0; color:var(--tinta); }
+.pie__fila{ display:flex; flex-wrap:wrap; gap:12px 32px; justify-content:space-between; margin-top:28px; font-weight:600; }
+.pie__fila ul{ display:flex; flex-wrap:wrap; gap:4px 20px; list-style:none; padding:0; margin:0; }
+
+/* Selector de paletas (solo para decidir en la maqueta) */
+.paletas{ position:fixed; z-index:55; left:calc(env(safe-area-inset-left,0px) + 12px); bottom:calc(env(safe-area-inset-bottom,0px) + 12px);
+  display:flex; gap:4px; padding:5px; border-radius:999px; background:var(--tinta); box-shadow:0 10px 30px -10px color-mix(in oklab, var(--tinta) 60%, transparent); }
+.paletas button{ min-height:44px; min-width:44px; border:0; border-radius:999px; padding:0 14px 0 8px; cursor:pointer;
+  display:inline-flex; align-items:center; gap:8px; font:800 .85rem/1 var(--f-texto); background:transparent; color:var(--papel); }
+.paletas button[aria-pressed="true"]{ background:var(--papel); color:var(--tinta); }
+.paletas i{ width:22px; height:22px; border-radius:50%; background:conic-gradient(var(--c1) 0 33%, var(--c2) 0 66%, var(--c3) 0); }
+.paletas button:focus-visible{ outline-color:var(--limon); }
+@media (max-width: 30rem){ .paletas span{ position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); } .paletas button{ padding:0 10px; } }
+
+/* Revelados ligados al scroll (CSS nativo; el estado final es el CSS base) */
+@supports (animation-timeline: view()){
+  @media (prefers-reduced-motion: no-preference){
+    .tarjeta__marco{ animation:cortina linear both; animation-timeline:view(); animation-range:entry 0% cover 38%; }
+    .tarjeta__marco svg{ animation:asentar linear both; animation-timeline:view(); animation-range:entry 0% cover 50%; }
+    .frase h2{ animation:barrido linear both; animation-timeline:view(); animation-range:entry 15% cover 45%; }
+    .frase__firma path{ stroke-dasharray:1; stroke-dashoffset:1; animation:trazo linear both; animation-timeline:view(); animation-range:entry 40% cover 55%; }
+    .respuesta{ animation:aparecer linear both; animation-timeline:view(); animation-range:entry 0% entry 90%; }
+  }
+}
+@keyframes cortina{ from{ clip-path:inset(100% 0 0 0 round 28px); } to{ clip-path:inset(0 0 0 0 round 28px); } }
+@keyframes asentar{ from{ transform:translateY(14%) scale(1.12); } to{ transform:none; } }
+@keyframes barrido{ from{ clip-path:inset(0 100% 0 0); } to{ clip-path:inset(0 0 0 0); } }
+@keyframes trazo{ to{ stroke-dashoffset:0; } }
+@keyframes aparecer{ from{ opacity:.15; transform:translateY(18px); } to{ opacity:1; transform:none; } }
+
+/* Cambio de paleta con View Transitions: círculo que crece desde el botón */
+::view-transition-old(root){ animation:none; }
+::view-transition-new(root){ animation:circulo .8s var(--ease-cine); }
+@keyframes circulo{ from{ clip-path:circle(0 at var(--vt-x, 50%) var(--vt-y, 100%)); } to{ clip-path:circle(150vmax at var(--vt-x, 50%) var(--vt-y, 100%)); } }
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{ animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.15s!important; scroll-behavior:auto!important; }
+}
+</style>
+</head>
+<body data-fondo="papel">
+
+<!-- Piezas reutilizables del muñeco: los colores llegan por variables CSS (--c-cuerpo, --c-pelo, --c-extra) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <pattern id="lineas-capa" width="8" height="6" patternUnits="userSpaceOnUse">
+      <rect width="8" height="1.2" y="4.8" fill="#000" fill-opacity=".08"/>
+    </pattern>
+    <filter id="mano" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence baseFrequency=".035" numOctaves="2" seed="7"/>
+      <feDisplacementMap in="SourceGraphic" scale="3"/>
+    </filter>
+    <clipPath id="silueta">
+      <circle cx="120" cy="98" r="72"/>
+      <path d="M58 260 C50 196 72 150 120 150 C168 150 190 196 182 260 Z"/>
+      <ellipse cx="58" cy="208" rx="15" ry="27" transform="rotate(18 58 208)"/>
+      <ellipse cx="182" cy="208" rx="15" ry="27" transform="rotate(-18 182 208)"/>
+    </clipPath>
+    <symbol id="flopi" viewBox="0 0 240 300">
+      <ellipse cx="120" cy="290" rx="78" ry="8" fill="var(--tinta)" fill-opacity=".14"/>
+      <rect x="44" y="256" width="152" height="30" rx="15" fill="var(--c-peana, var(--tinta))"/>
+      <ellipse cx="58" cy="208" rx="15" ry="27" transform="rotate(18 58 208)" fill="var(--c-cuerpo)"/>
+      <ellipse cx="182" cy="208" rx="15" ry="27" transform="rotate(-18 182 208)" fill="var(--c-cuerpo)"/>
+      <path d="M58 260 C50 196 72 150 120 150 C168 150 190 196 182 260 Z" fill="var(--c-cuerpo)"/>
+      <ellipse cx="120" cy="214" rx="30" ry="26" fill="#fff" fill-opacity=".35"/>
+      <circle cx="120" cy="98" r="72" fill="var(--piel)"/>
+      <path d="M62 78 C70 30 120 14 160 34 C176 42 186 58 186 74 C168 58 150 54 132 62 C120 44 92 46 62 78 Z" fill="var(--c-pelo)"/>
+      <ellipse cx="94" cy="104" rx="13" ry="15" fill="#fff"/><ellipse cx="146" cy="104" rx="13" ry="15" fill="#fff"/>
+      <circle cx="95" cy="106" r="7.5" fill="var(--tinta)"/><circle cx="147" cy="106" r="7.5" fill="var(--tinta)"/>
+      <circle cx="98" cy="102" r="2.4" fill="#fff"/><circle cx="150" cy="102" r="2.4" fill="#fff"/>
+      <circle cx="76" cy="128" r="10" fill="var(--chicle)" fill-opacity=".8"/><circle cx="164" cy="128" r="10" fill="var(--chicle)" fill-opacity=".8"/>
+      <path d="M108 132 Q120 144 132 132" fill="none" stroke="var(--tinta)" stroke-width="4" stroke-linecap="round"/>
+      <rect x="20" y="20" width="200" height="245" fill="url(#lineas-capa)" clip-path="url(#silueta)"/>
+    </symbol>
+    <symbol id="extra-casco" viewBox="0 0 240 300">
+      <circle cx="120" cy="98" r="86" fill="#fff" fill-opacity=".28" stroke="var(--tinta)" stroke-width="5"/>
+      <path d="M74 44 Q96 28 118 30" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="120" cy="8" r="9" fill="var(--c-extra)" stroke="var(--tinta)" stroke-width="4"/>
+    </symbol>
+    <symbol id="extra-dino" viewBox="0 0 240 300">
+      <path d="M78 40 L92 8 L104 34 L120 2 L134 32 L150 8 L160 40 Z" fill="var(--c-extra)" stroke="var(--tinta)" stroke-width="4" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="extra-corona" viewBox="0 0 240 300">
+      <path d="M86 40 L90 6 L106 26 L120 0 L134 26 L150 6 L154 40 Z" fill="var(--c-extra)" stroke="var(--tinta)" stroke-width="4" stroke-linejoin="round"/>
+      <circle cx="120" cy="30" r="5" fill="var(--chicle)"/>
+    </symbol>
+    <symbol id="extra-gorro" viewBox="0 0 240 300">
+      <path d="M56 58 Q120 -10 184 58 Z" fill="var(--c-extra)" stroke="var(--tinta)" stroke-width="4" stroke-linejoin="round"/>
+      <rect x="40" y="52" width="160" height="16" rx="8" fill="var(--c-extra)" stroke="var(--tinta)" stroke-width="4"/>
+      <circle cx="120" cy="34" r="9" fill="var(--limon)" stroke="var(--tinta)" stroke-width="3"/>
+    </symbol>
+    <symbol id="extra-orejas" viewBox="0 0 240 300">
+      <path d="M60 64 L58 8 L104 36 Z M180 64 L182 8 L136 36 Z" fill="var(--c-extra)" stroke="var(--tinta)" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M68 46 L67 22 L88 36 Z M172 46 L173 22 L152 36 Z" fill="var(--chicle)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="cabecera">
+  <div class="envoltorio">
+    <a class="marca" href="#inicio" aria-label="Flopi, inicio">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17" fill="var(--chicle)"/><circle cx="14" cy="19" r="3" fill="var(--tinta)"/><circle cx="26" cy="19" r="3" fill="var(--tinta)"/><path d="M15 26 Q20 30 25 26" fill="none" stroke="var(--tinta)" stroke-width="2.5" stroke-linecap="round"/></svg>
+      flopi
+    </a>
+    <ul class="menu">
+      <li><a href="#pandilla">Muñecos</a></li>
+      <li><a href="#capas">Cómo se hace</a></li>
+      <li><a href="#taller">Personaliza</a></li>
+      <li><a href="#padres">Para padres</a></li>
+    </ul>
+    <a class="boton" href="#taller">Crea tu Flopi</a>
+  </div>
+</header>
+<p class="etiqueta-maqueta">Maqueta: datos de ejemplo</p>
+
+<main id="inicio">
+  <section class="hero" data-fondo="papel" aria-labelledby="titulo-hero">
+    <div class="forma forma--a" data-profundidad="-0.25" aria-hidden="true"></div>
+    <div class="forma forma--b" data-profundidad="0.35" aria-hidden="true"></div>
+    <div class="forma forma--c" data-profundidad="0.6" aria-hidden="true"></div>
+    <div class="envoltorio">
+      <div class="hero__texto">
+        <h1 id="titulo-hero">
+          <span class="hero__linea"><span>Tu peque,</span></span>
+          <span class="hero__linea hero__linea--sangra"><span>hecho</span></span>
+          <span class="hero__linea"><span>muñeco.</span></span>
+        </h1>
+        <p class="hero__lead">Diseñamos e imprimimos en 3D un muñeco con su nombre, sus colores y su gorro favorito.</p>
+        <div class="hero__acciones">
+          <a class="boton hero__cta" href="#taller">Crea tu Flopi</a>
+          <a class="enlace hero__cta" href="#pandilla">Conoce a la pandilla</a>
+        </div>
+        <ul class="hero__datos hero__cta">
+          <li>Desde 29,90 € con IVA</li>
+          <li>Llega en 7–10 días</li>
+          <li>Hecho en España</li>
+        </ul>
+      </div>
+      <div class="hero__flopi">
+        <svg viewBox="-20 -20 280 320" role="img" aria-label="Flopi, un muñeco redondito con gorro de colores" style="--c-cuerpo:var(--cielo);--c-pelo:var(--tinta);--c-extra:var(--chicle);--c-peana:var(--tinta)">
+          <g class="flopi__cuerpo">
+            <ellipse cx="120" cy="290" rx="78" ry="8" fill="var(--tinta)" fill-opacity=".14"/>
+            <rect x="44" y="256" width="152" height="30" rx="15" fill="var(--c-peana)"/>
+            <text x="120" y="277" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="17" fill="var(--papel)">LUCÍA</text>
+            <ellipse cx="58" cy="208" rx="15" ry="27" transform="rotate(18 58 208)" fill="var(--c-cuerpo)"/>
+            <ellipse cx="182" cy="208" rx="15" ry="27" transform="rotate(-18 182 208)" fill="var(--c-cuerpo)"/>
+            <path d="M58 260 C50 196 72 150 120 150 C168 150 190 196 182 260 Z" fill="var(--c-cuerpo)"/>
+            <ellipse cx="120" cy="214" rx="30" ry="26" fill="#fff" fill-opacity=".35"/>
+            <rect x="20" y="140" width="200" height="125" fill="url(#lineas-capa)" clip-path="url(#silueta)"/>
+          </g>
+          <g class="flopi__cabeza">
+            <circle cx="120" cy="98" r="72" fill="var(--piel)"/>
+            <path d="M62 78 C70 30 120 14 160 34 C176 42 186 58 186 74 C168 58 150 54 132 62 C120 44 92 46 62 78 Z" fill="var(--c-pelo)"/>
+            <ellipse cx="94" cy="104" rx="13" ry="15" fill="#fff"/><ellipse cx="146" cy="104" rx="13" ry="15" fill="#fff"/>
+            <g class="flopi__pupila"><circle cx="95" cy="106" r="7.5" fill="var(--tinta)"/><circle cx="98" cy="102" r="2.4" fill="#fff"/></g>
+            <g class="flopi__pupila"><circle cx="147" cy="106" r="7.5" fill="var(--tinta)"/><circle cx="150" cy="102" r="2.4" fill="#fff"/></g>
+            <circle cx="76" cy="128" r="10" fill="var(--chicle)" fill-opacity=".8"/><circle cx="164" cy="128" r="10" fill="var(--chicle)" fill-opacity=".8"/>
+            <path d="M108 132 Q120 144 132 132" fill="none" stroke="var(--tinta)" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="120" cy="98" r="72" fill="url(#lineas-capa)"/>
+          </g>
+          <g class="flopi__extra"><use width="240" height="300" href="#extra-gorro"/></g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="capas" id="capas" data-fondo="menta" aria-labelledby="titulo-capas">
+    <div class="capas__pin">
+      <div class="envoltorio">
+        <div class="capas__texto">
+          <h2 id="titulo-capas">Así nace un Flopi</h2>
+          <ol class="pasos">
+            <li class="paso"><h3>Eliges cómo es</h3><p>Color, nombre y un accesorio.</p></li>
+            <li class="paso"><h3>Lo imprimimos capa a capa</h3><p>Una impresora 3D lo levanta en capas de 0,2 mm.</p></li>
+            <li class="paso"><h3>Lo repasamos a mano</h3><p>Lijamos, revisamos cada pieza y lo pintamos.</p></li>
+            <li class="paso"><h3>Llega a casa</h3><p>En una caja lista para regalar.</p></li>
+          </ol>
+          <p class="capas__medida">Unas 900 capas por muñeco de 18 cm.</p>
+        </div>
+        <div class="capas__escenario" aria-hidden="true">
+          <svg class="capas__fantasma" viewBox="-20 -20 280 320">
+            <g fill="none" stroke="var(--tinta)" stroke-width="2.5" stroke-dasharray="6 7" filter="url(#mano)">
+              <circle cx="120" cy="98" r="72"/>
+              <path d="M58 260 C50 196 72 150 120 150 C168 150 190 196 182 260 Z"/>
+              <rect x="44" y="256" width="152" height="30" rx="15"/>
+              <path d="M56 58 Q120 -10 184 58"/>
+            </g>
+          </svg>
+          <svg class="capas__flopi" viewBox="-20 -20 280 320" style="--c-cuerpo:var(--chicle);--c-pelo:var(--tinta);--c-extra:var(--cielo);--c-peana:var(--tinta)">
+            <use width="240" height="300" href="#flopi"/><use width="240" height="300" href="#extra-gorro"/>
+          </svg>
+          <div class="capas__boquilla"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pandilla" id="pandilla" data-fondo="papel" aria-labelledby="titulo-pandilla">
+    <div class="envoltorio">
+      <div class="pandilla__cabeza">
+        <h2 id="titulo-pandilla">La pandilla</h2>
+        <p>Cinco personajes para empezar. Todos cambian de color y llevan el nombre que elijas.</p>
+      </div>
+      <div class="rejilla">
+        <a class="tarjeta" href="#taller" data-profundidad="0.06">
+          <div class="tarjeta__marco" style="--fondo-tarjeta:var(--cielo)">
+            <svg viewBox="-20 -30 280 330" aria-hidden="true" style="--c-cuerpo:var(--papel);--c-pelo:var(--tinta);--c-extra:var(--chicle)"><use width="240" height="300" href="#flopi"/><use width="240" height="300" href="#extra-casco"/></svg>
+            <span class="hueco-foto">Foto real aquí</span>
+          </div>
+          <div class="tarjeta__pie"><span class="tarjeta__nombre">Astro</span><span class="tarjeta__precio">34,90 €</span></div>
+        </a>
+        <a class="tarjeta" href="#taller" data-profundidad="-0.08">
+          <div class="tarjeta__marco" style="--fondo-tarjeta:var(--limon)">
+            <svg viewBox="-20 -30 280 330" aria-hidden="true" style="--c-cuerpo:var(--menta);--c-pelo:var(--menta);--c-extra:var(--chicle)"><use width="240" height="300" href="#flopi"/><use width="240" height="300" href="#extra-dino"/></svg>
+            <span class="hueco-foto">Foto real aquí</span>
+          </div>
+          <div class="tarjeta__pie"><span class="tarjeta__nombre">Dino</span><span class="tarjeta__precio">32,90 €</span></div>
+        </a>
+        <a class="tarjeta" href="#taller" data-profundidad="0.12">
+          <div class="tarjeta__marco" style="--fondo-tarjeta:var(--chicle)">
+            <svg viewBox="-20 -30 280 330" aria-hidden="true" style="--c-cuerpo:var(--limon);--c-pelo:var(--tinta);--c-extra:var(--limon)"><use width="240" height="300" href="#flopi"/><use width="240" height="300" href="#extra-corona"/></svg>
+          </div>
+          <div class="tarjeta__pie"><span class="tarjeta__nombre">Reina</span><span class="tarjeta__precio">29,90 €</span></div>
+        </a>
+        <a class="tarjeta" href="#taller" data-profundidad="-0.04">
+          <div class="tarjeta__marco" style="--fondo-tarjeta:var(--menta)">
+            <svg viewBox="-20 -30 280 330" aria-hidden="true" style="--c-cuerpo:var(--chicle);--c-pelo:var(--tinta);--c-extra:var(--cielo)"><use width="240" height="300" href="#flopi"/><use width="240" height="300" href="#extra-gorro"/></svg>
+            <span class="hueco-foto">Foto real aquí</span>
+          </div>
+          <div class="tarjeta__pie"><span class="tarjeta__nombre">Pompón</span><span class="tarjeta__precio">29,90 €</span></div>
+        </a>
+        <a class="tarjeta" href="#taller" data-profundidad="0.1">
+          <div class="tarjeta__marco" style="--fondo-tarjeta:var(--cielo)">
+            <svg viewBox="-20 -30 280 330" aria-hidden="true" style="--c-cuerpo:var(--limon);--c-pelo:var(--limon);--c-extra:var(--limon)"><use width="240" height="300" href="#flopi"/><use width="240" height="300" href="#extra-orejas"/></svg>
+          </div>
+          <div class="tarjeta__pie"><span class="tarjeta__nombre">Michi</span><span class="tarjeta__precio">32,90 €</span></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="frase" data-fondo="chicle" aria-label="Lema">
+    <div class="envoltorio">
+      <h2><span>Cada Flopi</span><span>es único,</span><span>como su dueño.</span></h2>
+      <svg class="frase__firma" viewBox="0 0 400 40" aria-hidden="true"><path pathLength="1" d="M5 24 Q60 6 120 22 T240 20 T395 14" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" filter="url(#mano)"/></svg>
+    </div>
+  </section>
+
+  <section class="taller" id="taller" data-fondo="limon" aria-labelledby="titulo-taller">
+    <div class="envoltorio">
+      <div class="taller__vista">
+        <svg id="vista" viewBox="-20 -30 280 330" role="img" aria-label="Vista previa de tu Flopi" style="--c-cuerpo:var(--cielo);--c-pelo:var(--tinta);--c-extra:var(--chicle);--c-peana:var(--tinta)">
+          <g id="vista-cuerpo">
+            <use width="240" height="300" href="#flopi"/>
+            <text id="vista-nombre" x="120" y="277" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="17" fill="var(--papel)">LUCÍA</text>
+            <use id="vista-extra" width="240" height="300" href="#extra-gorro"/>
+          </g>
+        </svg>
+      </div>
+      <form class="taller__panel" id="taller-form" novalidate>
+        <h2 id="titulo-taller">Hazlo suyo</h2>
+        <div class="campo">
+          <label for="nombre">Su nombre</label>
+          <input type="text" id="nombre" name="nombre" value="Lucía" maxlength="12" autocomplete="off" aria-describedby="nombre-ayuda">
+          <small id="nombre-ayuda">Hasta 12 letras. Va grabado en la peana.</small>
+        </div>
+        <fieldset class="campo">
+          <legend>Color del cuerpo</legend>
+          <div class="muestras" data-grupo="cuerpo">
+            <button type="button" class="muestra" style="--muestra:var(--cielo)" data-valor="var(--cielo)" aria-pressed="true">Cielo</button>
+            <button type="button" class="muestra" style="--muestra:var(--chicle)" data-valor="var(--chicle)" aria-pressed="false">Chicle</button>
+            <button type="button" class="muestra" style="--muestra:var(--menta)" data-valor="var(--menta)" aria-pressed="false">Menta</button>
+            <button type="button" class="muestra" style="--muestra:var(--limon)" data-valor="var(--limon)" aria-pressed="false">Limón</button>
+          </div>
+        </fieldset>
+        <fieldset class="campo">
+          <legend>Accesorio</legend>
+          <div class="muestras" data-grupo="extra">
+            <button type="button" class="muestra" style="--muestra:var(--chicle)" data-valor="#extra-gorro" aria-pressed="true">Gorro</button>
+            <button type="button" class="muestra" style="--muestra:var(--limon)" data-valor="#extra-corona" aria-pressed="false">Corona</button>
+            <button type="button" class="muestra" style="--muestra:var(--menta)" data-valor="#extra-dino" aria-pressed="false">Crestas</button>
+            <button type="button" class="muestra" style="--muestra:var(--cielo)" data-valor="#extra-casco" aria-pressed="false">Casco</button>
+          </div>
+        </fieldset>
+        <div class="hero__acciones">
+          <button type="submit" class="boton">Añadir al carrito (29,90 €)</button>
+        </div>
+        <p class="aviso-maqueta" id="aviso" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <section class="padres" id="padres" data-fondo="papel" aria-labelledby="titulo-padres">
+    <div class="envoltorio">
+      <h2 id="titulo-padres">Lo que preguntan los padres</h2>
+      <dl class="respuestas">
+        <div class="respuesta"><dt>¿Para qué edad es?</dt><dd>Recomendado a partir de 3 años: tiene piezas pequeñas. <span class="por-confirmar">por confirmar</span></dd></div>
+        <div class="respuesta"><dt>¿De qué está hecho?</dt><dd>Plástico PLA de origen vegetal y pintura al agua. <span class="por-confirmar">por confirmar</span></dd></div>
+        <div class="respuesta"><dt>¿Cuándo llega?</dt><dd>Lo fabricamos en 5 días laborables y el envío tarda 48 h en península.</dd></div>
+        <div class="respuesta"><dt>¿Y si no nos gusta?</dt><dd>Como lleva su nombre, no se puede devolver por desistimiento. Si llega roto o con un defecto, lo reponemos gratis.</dd></div>
+        <div class="respuesta"><dt>¿El pago es seguro?</dt><dd>Pagas con tarjeta, Bizum o Apple Pay en una pasarela cifrada. No guardamos tus datos de pago.</dd></div>
+      </dl>
+    </div>
+  </section>
+</main>
+
+<footer class="pie" data-fondo="cielo">
+  <div class="envoltorio">
+    <p class="pie__marca" aria-hidden="true">flopi</p>
+    <div class="pie__fila">
+      <ul>
+        <li><a href="#padres">Seguridad y materiales</a></li>
+        <li><a href="#padres">Envíos y devoluciones</a></li>
+        <li><a href="#inicio">Aviso legal</a></li>
+        <li><a href="#inicio">Privacidad</a></li>
+      </ul>
+      <span>Maqueta de trabajo. Precios, plazos y textos son de ejemplo.</span>
+    </div>
+  </div>
+</footer>
+
+<div class="paletas" role="group" aria-label="Probar paleta de colores">
+  <button type="button" data-paleta="pastel" aria-pressed="true" style="--c1:#F7B9CB;--c2:#BDE7D7;--c3:#FBE7A3"><i></i><span>Pastel</span></button>
+  <button type="button" data-paleta="juguete" aria-pressed="false" style="--c1:#FF7A8A;--c2:#2CC9A9;--c3:#FFC83D"><i></i><span>Juguete</span></button>
+  <button type="button" data-paleta="bosque" aria-pressed="false" style="--c1:#EFA8A0;--c2:#7DB394;--c3:#EFD06F"><i></i><span>Bosque</span></button>
+</div>
+
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script src="vendor/lenis.min.js"></script>
+<script>
+(() => {
+  const $ = (s, c = document) => c.querySelector(s);
+  const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+  const raiz = document.documentElement;
+  const reducir = matchMedia("(prefers-reduced-motion: reduce)");
+
+  /* ---------- Paletas (View Transitions) ---------- */
+  const botonesPaleta = $$(".paletas button");
+  function aplicarPaleta(nombre){
+    raiz.dataset.paleta = nombre;
+    botonesPaleta.forEach(b => b.setAttribute("aria-pressed", String(b.dataset.paleta === nombre)));
+    try { localStorage.setItem("flopi-paleta", nombre); } catch (e) {}
+  }
+  try { const g = localStorage.getItem("flopi-paleta"); if (g) aplicarPaleta(g); } catch (e) {}
+  botonesPaleta.forEach(b => b.addEventListener("click", () => {
+    const nombre = b.dataset.paleta;
+    if (!document.startViewTransition || reducir.matches) return aplicarPaleta(nombre);
+    const r = b.getBoundingClientRect();
+    raiz.style.setProperty("--vt-x", (r.left + r.width / 2) + "px");
+    raiz.style.setProperty("--vt-y", (r.top + r.height / 2) + "px");
+    document.startViewTransition(() => aplicarPaleta(nombre));
+  }));
+
+  /* ---------- Fondo que cambia por sección ---------- */
+  const secciones = $$("[data-fondo]").filter(el => el !== document.body);
+  const io = new IntersectionObserver((entradas) => {
+    entradas.forEach(e => { if (e.isIntersecting) document.body.dataset.fondo = e.target.dataset.fondo; });
+  }, { rootMargin: "-50% 0px -50% 0px" });
+  secciones.forEach(s => io.observe(s));
+
+  /* ---------- Taller: vista previa en vivo ---------- */
+  const vista = $("#vista"), cuerpo = $("#vista-cuerpo"), nombreSvg = $("#vista-nombre"), extra = $("#vista-extra");
+  const rebote = () => {
+    if (!window.gsap || reducir.matches) return;
+    gsap.fromTo(cuerpo, { scaleX: 1.08, scaleY: .9 }, { scaleX: 1, scaleY: 1, duration: .7, ease: "elastic.out(1,.4)", transformOrigin: "50% 95%", overwrite: true });
+  };
+  $("#nombre").addEventListener("input", (e) => {
+    const limpio = e.target.value.replace(/[^\p{L} ]/gu, "").slice(0, 12);
+    if (limpio !== e.target.value) e.target.value = limpio;
+    nombreSvg.textContent = (limpio.trim() || "TU NOMBRE").toUpperCase();
+  });
+  $$(".muestras").forEach(grupo => grupo.addEventListener("click", (e) => {
+    const b = e.target.closest(".muestra"); if (!b) return;
+    $$(".muestra", grupo).forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    if (grupo.dataset.grupo === "cuerpo") vista.style.setProperty("--c-cuerpo", b.dataset.valor);
+    else extra.setAttribute("href", b.dataset.valor);
+    rebote();
+  }));
+  $("#taller-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    $("#aviso").textContent = "Esto es una maqueta: aquí se añadiría " + nombreSvg.textContent + " al carrito.";
+    rebote();
+  });
+
+  /* ---------- Movimiento (solo si hay GSAP y no se pide reducir) ---------- */
+  if (!window.gsap) return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  const mm = gsap.matchMedia();
+  mm.add({
+    movimiento: "(prefers-reduced-motion: no-preference)",
+    escritorio: "(min-width: 48.01rem)",
+    fino: "(pointer: fine)"
+  }, (ctx) => {
+    const { movimiento, escritorio, fino } = ctx.conditions;
+    if (!movimiento) return;
+
+    // R1 · Entrada del hero por capas
+    gsap.timeline({ defaults: { duration: .8, ease: "power3.out" } })
+      .from(".hero__linea > span", { yPercent: 115, stagger: .09 })
+      .from(".forma", { scale: .6, autoAlpha: 0, duration: 1, stagger: .08, ease: "back.out(1.4)" }, 0)
+      .from(".hero__flopi .flopi__cuerpo", { y: 70, scaleY: .55, transformOrigin: "50% 100%", ease: "back.out(1.7)" }, .25)
+      .from(".hero__flopi .flopi__cabeza", { y: -120, autoAlpha: 0, ease: "back.out(2)" }, .45)
+      .from(".hero__flopi .flopi__extra", { y: -60, rotate: -25, scale: .5, autoAlpha: 0, transformOrigin: "50% 100%", ease: "elastic.out(1,.5)", duration: 1.1 }, .7)
+      .from(".hero__cta", { y: 16, autoAlpha: 0, stagger: .06 }, .55);
+
+    // R4 · Parallax por capas de profundidad
+    $$("[data-profundidad]").forEach(el => {
+      const p = parseFloat(el.dataset.profundidad);
+      gsap.to(el, { yPercent: p * -100, ease: "none",
+        scrollTrigger: { trigger: el.closest("section"), start: "top bottom", end: "bottom top", scrub: true } });
+    });
+
+    // R5 · Momento firma: Flopi se imprime capa a capa (sección fijada en escritorio)
+    const escenario = $(".capas__escenario");
+    if (escritorio) {
+      const tl = gsap.timeline({ scrollTrigger: { trigger: ".capas", start: "top top", end: "+=180%", pin: ".capas__pin", scrub: .6, invalidateOnRefresh: true } });
+      tl.set(".capas__boquilla", { autoAlpha: 1 }, 0)
+        .fromTo(".capas__flopi", { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", ease: "none", duration: 1 }, 0)
+        .fromTo(".capas__boquilla", { y: 0 }, { y: () => -escenario.offsetHeight, ease: "none", duration: 1 }, 0)
+        .fromTo(".paso", { opacity: .28 }, { opacity: 1, stagger: .25, duration: .2, ease: "none" }, 0)
+        .to(".capas__boquilla", { autoAlpha: 0, duration: .05 }, 1)
+        .fromTo(".capas__flopi", { scale: 1 }, { scale: 1.04, yoyo: true, repeat: 1, duration: .05, transformOrigin: "50% 100%" }, 1);
+    } else {
+      gsap.from(".capas__flopi", { clipPath: "inset(100% 0% 0% 0%)", duration: 1.4, ease: "power2.inOut",
+        scrollTrigger: { trigger: escenario, start: "top 75%" } });
+    }
+
+    // R3 · Fallback de la galería si el navegador no tiene scroll-driven animations
+    if (!CSS.supports("animation-timeline: view()")) {
+      gsap.set(".tarjeta__marco", { clipPath: "inset(100% 0% 0% 0% round 28px)" });
+      ScrollTrigger.batch(".tarjeta__marco", { start: "top 88%",
+        onEnter: (lote) => gsap.to(lote, { clipPath: "inset(0% 0% 0% 0% round 28px)", duration: 1, ease: "expo.inOut", stagger: .1, overwrite: true }) });
+    }
+
+    // R7 · Los ojos de Flopi siguen al cursor
+    if (fino) {
+      const pupilas = $$(".hero__flopi .flopi__pupila");
+      const xTo = pupilas.map(p => gsap.quickTo(p, "x", { duration: .45, ease: "power3" }));
+      const yTo = pupilas.map(p => gsap.quickTo(p, "y", { duration: .45, ease: "power3" }));
+      const mover = (e) => {
+        const dx = (e.clientX / innerWidth - .5) * 9, dy = (e.clientY / innerHeight - .5) * 9;
+        xTo.forEach(f => f(dx)); yTo.forEach(f => f(dy));
+      };
+      addEventListener("pointermove", mover);
+      return () => removeEventListener("pointermove", mover);
+    }
+  });
+
+  // Scroll suave: solo con ratón/trackpad y sin reducir movimiento
+  if (matchMedia("(pointer: fine)").matches && !reducir.matches && window.Lenis) {
+    const lenis = new Lenis({ lerp: .1, anchors: { offset: -80 } });
+    lenis.on("scroll", ScrollTrigger.update);
+    gsap.ticker.add((t) => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+  }
+})();
+</script>
+</body>
+</html>
