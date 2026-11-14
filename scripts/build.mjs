@@ -44,8 +44,7 @@ const registrar = (archivo, html) => { paginas.push(archivo); return escribir(ar
 let seccionHuevos = () => "";
 let paginaHuevos = null;
 try { ({ seccionHuevos = () => "", paginaHuevos = null } = await import("../src/paginas/huevos.mjs")); } catch {}
-let seccionEventos = () => "", paginaEventos = null;
-try { ({ seccionEventos = () => "", paginaEventos = null } = await import("../src/paginas/eventos.mjs")); } catch {}
+const { seccionRegalos, paginaRegalos } = await import("../src/paginas/regalos.mjs");
 
 const porSlug = Object.fromEntries(productos.map((p) => [p.slug, p]));
 const { pack, descuentos = [], faq = [], destacados = [] } = datos;
@@ -62,7 +61,7 @@ const OFERTA = `<div class="oferta hero__cta">
 
 const DESTACADOS = `<section class="destacados" data-fondo="papel" aria-labelledby="titulo-destacados">
     <div class="envoltorio">
-      <div class="destacados__cabeza"><h2 id="titulo-destacados">Tres para empezar</h2><p>Los que más ganas tenemos de ver en casa. Todos cambian de color y de accesorio.</p></div>
+      <div class="destacados__cabeza"><h2 id="titulo-destacados">Tres para empezar</h2><p>Los más populares entre los niños. Todos cambian de color y de accesorio.</p></div>
       <div class="destacados__fila">
 ${destacados.map((slug) => porSlug[slug]).filter(Boolean).map((p) => `        <a class="destacado" href="flopi-${p.slug}.html">
           <div class="destacado__marco" style="--fondo-tarjeta:var(--${p.fondo})"><img src="assets/img/flopi-${p.slug}.svg" alt="${esc(p.nombre)}, figura Flopi con ${esc(accesorios[p.accesorio].nombre.toLowerCase())}" width="560" height="660" loading="lazy" decoding="async"></div>
@@ -118,7 +117,7 @@ const faqLD = {
 const huevosHTML = (() => { try { return seccionHuevos(datos) || ""; } catch (e) { console.warn("huevos.mjs: seccionHuevos falló:", e.message); return ""; } })();
 const piezas = {
   "{{OFERTA}}": OFERTA, "{{DESTACADOS}}": DESTACADOS, "{{PANDILLA}}": productos.map((p, i) => tarjeta(p, datos, i)).join("\n"),
-  "{{HUEVOS}}": huevosHTML, "{{EVENTOS}}": (() => { try { return seccionEventos(datos) || ""; } catch (e) { console.warn("eventos.mjs:", e.message); return ""; } })(), "{{PACK}}": PACK, "{{DESCUENTOS}}": DESCUENTOS, "{{FAQ}}": FAQ,
+  "{{HUEVOS}}": huevosHTML, "{{REGALOS}}": seccionRegalos(datos), "{{PACK}}": PACK, "{{DESCUENTOS}}": DESCUENTOS, "{{FAQ}}": FAQ,
 };
 let inicio = await readFile(new URL("src/paginas/inicio.html", raiz), "utf8");
 for (const [k, v] of Object.entries(piezas)) inicio = inicio.replace(k, () => v);
@@ -138,14 +137,12 @@ if (typeof paginaHuevos === "function") {
   }));
 }
 
-if (typeof paginaEventos === "function") {
-  await registrar("eventos.html", pagina({
-    titulo: "Comuniones y bodas Flopi",
-    descripcion: "Un mini Flopi para cada invitado: detalles para comuniones y bodas en los colores de tu evento.",
-    activo: "eventos",
-    cuerpo: paginaEventos(datos),
-  }));
-}
+await registrar("regalos.html", pagina({
+  titulo: "Regalos Flopi",
+  descripcion: "Regalos de cumpleaños: Flopis en caja con lazo y tarjeta escrita a mano, y bolsitas sorpresa para los invitados.",
+  activo: "regalos",
+  cuerpo: paginaRegalos(datos),
+}));
 
 // ---- Catálogo ----
 await registrar("munecos.html", pagina({

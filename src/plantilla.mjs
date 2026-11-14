@@ -7,7 +7,7 @@ const ICONO_CARRITO = `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" s
 const MENU = [
   ["munecos.html", "Flopis", "munecos"],
   ["huevos.html", "Huevos sorpresa", "huevos"],
-  ["eventos.html", "Comuniones y bodas", "eventos"],
+  ["regalos.html", "Regalos", "regalos"],
   ["seguridad.html", "Seguridad", "seguridad"],
   ["envios.html", "Envíos", "envios"],
 ];
@@ -64,7 +64,7 @@ export function pagina({ titulo, descripcion, activo = "", fondo = "papel", cuer
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Lilita+One&family=Nunito:wght@400;600;800&display=swap">
 <link rel="stylesheet" href="assets/css/flopi.css">
 <link rel="stylesheet" href="assets/css/huevos.css">
-<link rel="stylesheet" href="assets/css/eventos.css">
+<link rel="stylesheet" href="assets/css/regalos.css">
 <script>try{var p=localStorage.getItem("flopi-paleta");if(p)document.documentElement.dataset.paleta=p}catch(e){}</script>
 ${cabezaExtra}
 </head>
@@ -91,7 +91,7 @@ ${cuerpo}
       <ul>
         <li><a href="munecos.html">Flopis</a></li>
         <li><a href="huevos.html">Huevos sorpresa</a></li>
-        <li><a href="eventos.html">Comuniones y bodas</a></li>
+        <li><a href="regalos.html">Regalos</a></li>
         <li><a href="seguridad.html">Seguridad y materiales</a></li>
         <li><a href="envios.html">Envíos y devoluciones</a></li>
         <li><a href="aviso-legal.html">Aviso legal</a></li>
@@ -114,7 +114,7 @@ ${cuerpo}
 <script src="assets/js/carrito.js" defer></script>
 <script src="assets/js/flopi.js" defer></script>
 <script src="assets/js/huevos.js" defer></script>
-<script src="assets/js/eventos.js" defer></script>
+<script src="assets/js/regalos.js" defer></script>
 ${scripts.map((s) => `<script src="${s}" defer></script>`).join("\n")}
 </body>
 </html>

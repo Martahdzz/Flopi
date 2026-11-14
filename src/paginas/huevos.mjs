@@ -86,7 +86,7 @@ export function paginaHuevos(datos) {
         <span class="quien__nombre">${esc(p.nombre)}</span>
       </li>`).join("");
 
-  return `<section class="portada huevos-portada">
+  return `<section class="portada huevos-portada" data-fondo="papel">
   <div class="envoltorio">
     <ol class="miga" aria-label="Estás aquí">
       <li><a href="index.html">Inicio</a></li>
@@ -97,7 +97,7 @@ export function paginaHuevos(datos) {
   </div>
 </section>
 
-<section class="huevo-taller" data-fondo="chicle" aria-labelledby="titulo-huevo-taller">
+<section class="huevo-taller" data-fondo="papel" aria-labelledby="titulo-huevo-taller">
   <div class="envoltorio">
     <div class="huevo-taller__vista" id="huevo-vista" style="--huevo-color:${hex(datos, inicial)}">
       <span class="huevo__caja">${huevoSVG({ color: hex(datos, inicial), id: "hv-vista" })}</span>
@@ -119,7 +119,7 @@ export function paginaHuevos(datos) {
   </div>
 </section>
 
-<section class="huevo-pasos" data-fondo="menta" aria-labelledby="titulo-huevo-pasos">
+<section class="huevo-pasos" data-fondo="papel" aria-labelledby="titulo-huevo-pasos">
   <div class="envoltorio">
     <h2 id="titulo-huevo-pasos">Cómo funciona</h2>
     <ol class="huevo-pasos__lista">
@@ -130,7 +130,7 @@ export function paginaHuevos(datos) {
   </div>
 </section>
 
-<section class="quien" aria-labelledby="titulo-quien">
+<section class="quien" data-fondo="papel" aria-labelledby="titulo-quien">
   <div class="envoltorio">
     <h2 id="titulo-quien">Puede salir cualquiera</h2>
     <p>El personaje se elige al azar entre los cinco de la pandilla. No se puede escoger: esa es la gracia.</p>

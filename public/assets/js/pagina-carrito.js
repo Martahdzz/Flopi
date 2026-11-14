@@ -16,6 +16,7 @@
   // Detalle bajo el nombre: lo que incluye un pack, color de catálogo o, en los Flopis propios, color/pelo/accesorio.
   function detalle(x) {
     if (Array.isArray(x.incluye)) {
+      if (/^regalo-/.test(x.slug)) return esc([x.color, x.tarjeta ? `tarjeta: «${x.tarjeta}»` : ""].filter(Boolean).join(" · "));
       return `<details class="linea__incluye"><summary>${x.incluye.length} Flopis, ver cuáles</summary><ul>${x.incluye.map((a) => `<li>${esc(a)}</li>`).join("")}</ul></details>`;
     }
     if ((window.FlopiImagenes || {})[x.slug] || !datos.productos[x.slug]) return x.color ? `Color: ${esc(x.color)}` : "";
@@ -29,7 +30,7 @@
   function agrupar(l) {
     const grupos = new Map();
     for (const x of l) {
-      const clave = [x.slug, x.color || "", x.pelo || "", x.accesorio || "", (x.incluye || []).join(",")].join("|");
+      const clave = [x.slug, x.color || "", x.pelo || "", x.accesorio || "", (x.incluye || []).join(","), x.tarjeta || ""].join("|");
       if (!grupos.has(clave)) grupos.set(clave, { clave, muestra: x, ids: [] });
       grupos.get(clave).ids.push(x.id);
     }

@@ -1,0 +1,89 @@
+/* Flopi · regalos (portada y regalos.html). Mismos tokens que el resto de la web. */
+.sr{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+
+/* Dibujo de caja con un Flopi real asomando por arriba */
+.regalo__dibujo{ position:relative; display:block; aspect-ratio:1; width:100%; }
+.regalo__dibujo .caja-svg{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; z-index:2; }
+.regalo__asoma{ position:absolute; left:14%; right:14%; top:-16%; height:66%; z-index:1; display:none; align-items:flex-end; justify-content:center; }
+.regalo__dibujo.con-foto .regalo__asoma{ display:flex; }
+.regalo__asoma img{ height:100%; width:auto; max-width:72%; object-fit:contain; object-position:center bottom; flex:none; }
+.regalo__asoma[data-n="2"] img, .regalo__asoma[data-n="3"] img{ height:78%; max-width:46%; margin-inline:-7%; }
+.regalo__asoma[data-n="3"] .asoma--caballo{ height:100%; position:relative; z-index:1; }
+.regalo__asoma .asoma--tortuga{ height:52% !important; max-width:60% !important; margin-bottom:12%; }
+.regalo__dibujo.con-foto .caja-svg__tapa{ transform:translate(-14px, 30px) rotate(-14deg); transform-box:fill-box; transform-origin:0 100%; }
+
+/* ---- Portada ---- */
+.regalos-portada{ padding-block:clamp(56px, 8vw, 112px); }
+.regalos-portada .envoltorio{ display:grid; grid-template-columns:minmax(0, 5fr) minmax(0, 7fr); gap:var(--gap); align-items:center; }
+.regalos-portada h2{ font-size:var(--t-1); }
+.regalos-portada__texto p{ margin-top:14px; max-width:34ch; }
+.regalos-portada__desde{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+.regalos-portada__texto .boton{ margin-top:22px; }
+.regalos-portada__cajas{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:clamp(10px, 2vw, 24px); }
+.regalos-portada__caja a{ display:grid; gap:4px; text-align:center; color:inherit; text-decoration:none; }
+.regalos-portada__nombre{ font:800 1.05rem/1.2 var(--f-display); margin-top:8px; }
+.regalos-portada__precio{ font-weight:800; color:var(--suave); }
+.regalos-portada__caja:nth-child(2){ translate:0 -14px; }
+@media (prefers-reduced-motion: no-preference){
+  .regalos-portada__caja .regalo__dibujo{ transition:transform .5s var(--ease-muelle); }
+  .regalos-portada__caja a:hover .regalo__dibujo{ transform:translateY(-8px) rotate(-3deg); }
+}
+@media (max-width: 48rem){ .regalos-portada .envoltorio{ grid-template-columns:1fr; } }
+
+/* ---- Página ---- */
+.regalos{ padding-bottom:clamp(56px, 8vw, 112px); }
+.regalos__form{ display:grid; gap:clamp(28px, 4vw, 44px); }
+.rpaso{ border:0; margin:0; padding:0; min-width:0; }
+.rpaso legend{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; font:800 var(--t-2, 1.6rem)/1.15 var(--f-display); margin-bottom:16px; padding:0; }
+.rpaso__n{ display:grid; place-items:center; width:38px; height:38px; border-radius:50%; background:var(--tinta); color:var(--papel); font-size:1.05rem; }
+.rpaso__opcional{ font:600 var(--t-chico) var(--f-texto); color:var(--suave); }
+.rpaso__nota{ margin-top:14px; color:var(--suave); font-size:var(--t-chico); }
+.rpaso__chips{ display:flex; flex-wrap:wrap; gap:10px; }
+.chip input{ position:absolute; opacity:0; }
+.chip span{ display:inline-block; padding:12px 20px; border-radius:999px; border:2px solid var(--tinta); font-weight:800; cursor:pointer; transition:background .2s, color .2s; }
+.chip input:checked + span{ background:var(--tinta); color:var(--papel); }
+.chip input:focus-visible + span{ outline:3px solid var(--tinta); outline-offset:3px; }
+
+.regalos__lista{ list-style:none; margin:0; padding:0; max-width:980px; display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap:var(--gap); }
+.regalo[hidden]{ display:none; }
+.regalo__opcion{ position:relative; display:grid; gap:6px; height:100%; padding:18px 18px 20px; border-radius:28px; background:#F6F5F3; border:2px solid transparent; cursor:pointer; transition:border-color .2s, transform .3s var(--ease-salida); }
+.regalo__opcion:hover{ transform:translateY(-3px); }
+.regalo__opcion input{ position:absolute; opacity:0; }
+.regalo__opcion:has(input:checked){ border-color:var(--tinta); background:color-mix(in oklab, var(--lazo, var(--chicle)) 22%, #F6F5F3); }
+.regalo__opcion:has(input:focus-visible){ outline:3px solid var(--tinta); outline-offset:4px; }
+.regalo__opcion .regalo__dibujo{ width:78%; margin:4px auto 6px; }
+.regalo__sello{ position:absolute; top:14px; left:14px; z-index:3; font-size:.78rem; font-weight:800; background:var(--limon); padding:3px 10px; border-radius:999px; rotate:-4deg; }
+.regalo__nombre{ font:800 1.25rem/1.15 var(--f-display); }
+.regalo__incluye{ font-weight:800; font-size:var(--t-chico); }
+.regalo__texto{ color:var(--suave); font-size:var(--t-chico); }
+.regalo__precio{ margin-top:auto; padding-top:6px; font:800 1.3rem var(--f-display); }
+.regalo__precio small{ font:600 .82rem var(--f-texto); color:var(--suave); }
+
+.puntos--lazo{ display:flex; align-items:center; gap:4px; }
+.punto{ position:relative; width:48px; height:48px; display:grid; place-items:center; cursor:pointer; }
+.punto::before{ content:""; width:30px; height:30px; border-radius:50%; background:var(--c); box-shadow:inset 0 0 0 1px color-mix(in oklab, var(--tinta) 18%, transparent); transition:transform .2s; }
+.punto:hover::before{ transform:scale(1.1); }
+.punto:has(input:checked)::before{ box-shadow:0 0 0 3px var(--papel), 0 0 0 5px var(--tinta); }
+.punto:has(input:focus-visible){ outline:3px solid var(--tinta); border-radius:50%; }
+.punto input{ position:absolute; opacity:0; }
+.puntos__nombre{ margin-left:10px; font-weight:800; }
+
+.tarjeta-msg{ position:relative; display:block; max-width:560px; }
+.tarjeta-msg textarea{ width:100%; resize:vertical; font:600 1.05rem/1.5 var(--f-texto); padding:16px 18px 30px; border-radius:20px; border:2px solid var(--tinta); background:#FFFDF8; color:var(--tinta); }
+.tarjeta-msg__cuenta{ position:absolute; right:16px; bottom:10px; font-size:.8rem; color:var(--suave); font-weight:800; }
+
+.regalos__resumen{ position:relative; display:flex; align-items:center; gap:18px; padding:14px 22px 14px 14px; border-radius:28px; background:var(--papel); border:2px solid var(--tinta); box-shadow:0 10px 30px -14px color-mix(in oklab, var(--tinta) 45%, transparent); max-width:620px; }
+.regalos__vista{ width:86px; flex:none; }
+.regalos__vista .regalo__dibujo{ width:100%; }
+.regalos__total{ display:flex; gap:12px; align-items:baseline; flex-wrap:wrap; font:800 1.2rem var(--f-display); margin:0; }
+.regalos__detalle{ margin:2px 0 10px; color:var(--suave); font-size:var(--t-chico); }
+.regalos__ok{ margin:8px 0 0; font-weight:800; }
+.regalos__edad{ font-size:var(--t-chico); color:var(--suave); max-width:60ch; }
+@media (prefers-reduced-motion: no-preference){
+  .regalos__vista.salta{ animation:regalo-salta .6s var(--ease-muelle); }
+  @keyframes regalo-salta{ 0%{ transform:scale(1); } 30%{ transform:translateY(-14px) scale(1.06, .94); } 100%{ transform:none; } }
+}
+@media (max-width: 30rem){
+  .regalos__resumen{ gap:12px; padding:10px 14px 10px 10px; }
+  .regalos__vista{ width:64px; }
+}

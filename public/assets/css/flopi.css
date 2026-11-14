@@ -238,9 +238,9 @@ section[id]{ scroll-margin-top:110px; }
 @media (max-width: 48rem){ .padres h2, .respuestas{ grid-column:1 / -1; } .padres h2{ position:static; } }
 
 /* Pie */
-.pie{ padding-block:clamp(56px, 8vw, 96px) calc(40px + env(safe-area-inset-bottom, 0px)); overflow:clip; }
-.pie__marca{ margin:0; }
-.logo--grande{ width:min(92vw, 1100px); margin-inline:auto; }
+.pie{ padding-block:clamp(40px, 5vw, 64px) calc(40px + env(safe-area-inset-bottom, 0px)); overflow:clip; }
+.pie__marca{ margin:0 0 8px; display:flex; justify-content:center; }
+.logo--grande{ width:min(60vw, 320px); margin-inline:auto; }
 .pie__redes{ margin-top:20px; font-weight:700; }
 .pie__fila{ display:flex; flex-wrap:wrap; gap:12px 32px; justify-content:space-between; margin-top:28px; font-weight:600; }
 .pie__fila ul{ display:flex; flex-wrap:wrap; gap:4px 20px; list-style:none; padding:0; margin:0; }
