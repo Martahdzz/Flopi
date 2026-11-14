@@ -7,6 +7,12 @@
   const raiz = document.documentElement;
   const reducir = matchMedia("(prefers-reduced-motion: reduce)");
 
+  /* ---------- Cada página empieza arriba (salvo enlaces a una sección: #ancla) ---------- */
+  try { if ("scrollRestoration" in history) history.scrollRestoration = "manual"; } catch (e) {}
+  const alInicio = () => { if (!location.hash) scrollTo({ top: 0, left: 0, behavior: "instant" }); };
+  alInicio();
+  addEventListener("pageshow", alInicio);
+
   /* ---------- Paletas (View Transitions: círculo que crece desde el botón) ---------- */
   const botonesPaleta = $$(".paletas button");
   function aplicarPaleta(nombre) {
@@ -23,6 +29,63 @@
     raiz.style.setProperty("--vt-y", r.top + r.height / 2 + "px");
     document.startViewTransition(() => aplicarPaleta(nombre));
   }));
+
+  /* ---------- Pestaña activa: también para enlaces a secciones (index.html#huevos) ---------- */
+  const enlacesMenu = $$(".cabecera .menu a");
+  const paginaActual = location.pathname.split("/").pop() || "index.html";
+  enlacesMenu.forEach((a) => {
+    if (a.getAttribute("aria-current") === "page" && !a.getAttribute("href").includes("#")) a.dataset.paginaActiva = "1";
+  });
+  const marcarPestana = (hash) => {
+    let alguna = false;
+    enlacesMenu.forEach((a) => {
+      const partes = a.getAttribute("href").split("#");
+      if (!partes[1] || partes[0] !== paginaActual) return;
+      if (hash === "#" + partes[1]) { a.setAttribute("aria-current", "page"); alguna = true; }
+      else a.removeAttribute("aria-current");
+    });
+    enlacesMenu.forEach((a) => {
+      if (a.dataset.paginaActiva !== "1") return;
+      if (alguna) a.removeAttribute("aria-current"); else a.setAttribute("aria-current", "page");
+    });
+    const activa = $(".cabecera .menu a[aria-current]");
+    if (activa && activa.parentElement.parentElement.scrollWidth > activa.parentElement.parentElement.clientWidth) {
+      activa.scrollIntoView({ block: "nearest", inline: "nearest" });
+    }
+  };
+  const seccionesMenu = enlacesMenu
+    .map((a) => a.getAttribute("href").split("#"))
+    .filter((x) => x[1] && x[0] === paginaActual)
+    .map((x) => document.getElementById(x[1]))
+    .filter(Boolean);
+  if (seccionesMenu.length) {
+    const comprobar = () => {
+      const linea = innerHeight * 0.6;
+      const dentro = seccionesMenu.find((sec) => { const r = sec.getBoundingClientRect(); return r.top < linea && r.bottom > 120; });
+      marcarPestana(dentro ? "#" + dentro.id : "");
+    };
+    let pendiente = false;
+    let pausaHasta = performance.now() + 1500;
+    enlacesMenu.forEach((a) => a.addEventListener("click", () => { pausaHasta = performance.now() + 1600; }));
+    addEventListener("hashchange", () => { pausaHasta = performance.now() + 1600; });
+    addEventListener("scroll", () => { if (pendiente || performance.now() < pausaHasta) return; pendiente = true; requestAnimationFrame(() => { pendiente = false; comprobar(); }); }, { passive: true });
+  }
+  marcarPestana(location.hash);
+  addEventListener("hashchange", () => marcarPestana(location.hash));
+
+  /* ---------- Menú desplegable en pantallas medianas y pequeñas ---------- */
+  const menuBoton = $(".menu-boton"), menuNav = $("#menu-principal");
+  if (menuBoton && menuNav) {
+    const cerrar = () => { menuNav.classList.remove("abierto"); menuBoton.setAttribute("aria-expanded", "false"); };
+    menuBoton.addEventListener("click", () => {
+      const abrir = !menuNav.classList.contains("abierto");
+      menuNav.classList.toggle("abierto", abrir); menuBoton.setAttribute("aria-expanded", String(abrir));
+      if (abrir) menuNav.querySelector("a")?.focus();
+    });
+    addEventListener("keydown", (e) => { if (e.key === "Escape" && menuNav.classList.contains("abierto")) { cerrar(); menuBoton.focus(); } });
+    menuNav.addEventListener("click", (e) => { if (e.target.closest("a")) cerrar(); });
+    document.addEventListener("click", (e) => { if (!e.target.closest(".cabecera")) cerrar(); });
+  }
 
   /* ---------- El fondo cambia de color por sección (R10) ---------- */
   const secciones = $$("[data-fondo]").filter((el) => el !== document.body);
@@ -132,24 +195,7 @@
         }
       }
 
-      // R3 · Fallback de revelado si el navegador no tiene scroll-driven animations
-      if (!CSS.supports("animation-timeline: view()")) {
-        const marcos = $$(".tarjeta__marco, .foto");
-        if (marcos.length) {
-          gsap.set(marcos, { clipPath: "inset(100% 0% 0% 0% round 28px)" });
-          ScrollTrigger.batch(marcos, { start: "top 88%",
-            onEnter: (lote) => gsap.to(lote, { clipPath: "inset(0% 0% 0% 0% round 28px)", duration: 1, ease: "expo.inOut", stagger: 0.1, overwrite: true }) });
-        }
-      }
-
       // Destacados: stagger de entrada solo si no hay revelado nativo con view()
-      const destacados = $$(".destacado");
-      if (destacados.length && !CSS.supports("animation-timeline: view()")) {
-        gsap.set(destacados, { y: 60, autoAlpha: 0 });
-        ScrollTrigger.batch(destacados, { start: "top 85%",
-          onEnter: (lote) => gsap.to(lote, { y: 0, autoAlpha: 1, duration: 0.8, ease: "power3.out", stagger: { each: 0.09, from: "start" }, overwrite: true }) });
-      }
-
       // Pack: los cinco Flopis salen juntos del centro y se abren en abanico
       const composicion = $(".pack__composicion");
       const flopisPack = composicion ? $$(".pack__flopi", composicion) : [];
@@ -190,11 +236,12 @@
 
     // Scroll suave: solo con ratón/trackpad y sin reducir movimiento
     if (matchMedia("(pointer: fine)").matches && !reducir.matches && window.Lenis) {
-      const lenis = new Lenis({ lerp: 0.1, anchors: { offset: -20 } });
+      const lenis = new Lenis({ lerp: 0.1, anchors: { offset: -100 } });
       lenis.on("scroll", ScrollTrigger.update);
       gsap.ticker.add((t) => lenis.raf(t * 1000));
       gsap.ticker.lagSmoothing(0);
       window.flopiLenis = lenis;
+      if (!location.hash) lenis.scrollTo(0, { immediate: true });
     }
   }
   iniciarMovimiento();

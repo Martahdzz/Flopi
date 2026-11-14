@@ -56,7 +56,7 @@ export function huevoSVG({ color = "#F4A6BC", id = "h" }) {
   const relleno = `style="fill:var(--huevo-color, ${color})"`;
   const zig = HUEVO_ZIGZAG;
   const borde = `<path d="${HUEVO_FORMA}" fill="none" stroke="#2E2A3A" stroke-width="5"/><polyline points="${zig}" fill="none" stroke="#2E2A3A" stroke-width="7" stroke-linejoin="round" clip-path="url(#${id}-forma)"/>`;
-  const capas = `<rect x="0" y="0" width="200" height="250" fill="url(#${id}-capas)" clip-path="url(#${id}-forma)"/>`;
+  const capas = ""; // sin rayas de capas
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 252" width="200" height="252" class="huevo__svg" aria-hidden="true" focusable="false">
   <defs>
     <pattern id="${id}-capas" width="8" height="5" patternUnits="userSpaceOnUse"><rect width="8" height="1.1" y="3.9" fill="#000" fill-opacity=".09"/></pattern>

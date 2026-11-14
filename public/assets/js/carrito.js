@@ -10,7 +10,7 @@
     document.querySelectorAll("[data-carrito-cuenta]").forEach((el) => {
       el.textContent = n;
       el.dataset.vacio = String(n === 0);
-      el.setAttribute("aria-label", n === 1 ? "1 muñeco" : n + " muñecos");
+      el.setAttribute("aria-label", n === 1 ? "1 figura" : n + " figuras");
     });
   }
 

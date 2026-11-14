@@ -68,7 +68,7 @@
       slug: producto.slug, producto: producto.nombre, precio: producto.precio,
       color: estado.color, pelo: estado.pelo, accesorio: estado.accesorio,
     });
-    aviso.innerHTML = `Añadido. Llevas ${total} ${total === 1 ? "muñeco" : "muñecos"}. <a href="carrito.html">Ver carrito</a>`;
+    aviso.innerHTML = `Añadido. Llevas ${total} ${total === 1 ? "figura" : "figuras"}. <a href="carrito.html">Ver carrito</a>`;
     rebote($(".carrito-enlace"));
   });
 

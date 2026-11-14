@@ -44,6 +44,8 @@ const registrar = (archivo, html) => { paginas.push(archivo); return escribir(ar
 let seccionHuevos = () => "";
 let paginaHuevos = null;
 try { ({ seccionHuevos = () => "", paginaHuevos = null } = await import("../src/paginas/huevos.mjs")); } catch {}
+let seccionEventos = () => "", paginaEventos = null;
+try { ({ seccionEventos = () => "", paginaEventos = null } = await import("../src/paginas/eventos.mjs")); } catch {}
 
 const porSlug = Object.fromEntries(productos.map((p) => [p.slug, p]));
 const { pack, descuentos = [], faq = [], destacados = [] } = datos;
@@ -52,10 +54,10 @@ const ahorro = sumaSuelta - pack.precio;
 const precioPack = `<s>${euros(sumaSuelta)}</s> <strong>${euros(pack.precio)}</strong> <span class="oferta__ahorro">Ahorras ${euros(ahorro)}</span>`;
 
 const OFERTA = `<div class="oferta hero__cta">
-          <p class="oferta__titulo">${esc(pack.nombre)}</p>
-          <p class="oferta__precio">${precioPack}</p>
-          <div class="oferta__acciones"><a class="boton" href="#pack">Ver el pack</a><a class="enlace" href="munecos.html">Elegir por separado</a></div>
-          <p class="oferta__nota">Cada Flopi con los colores que elijas. Precios de ejemplo.</p>
+          <p class="oferta__titulo">Crea tu pandilla</p>
+          <p class="oferta__precio"><strong>Hasta −15 %</strong> <span class="oferta__ahorro">15, 25 o 30 Flopis</span></p>
+          <div class="oferta__acciones"><a class="boton" href="munecos.html#pandilla">Crear pandilla</a><a class="enlace" href="munecos.html">Elegir por separado</a></div>
+          <p class="oferta__nota">Tú eliges los Flopis y sus colores. Descuentos de ejemplo.</p>
         </div>`;
 
 const DESTACADOS = `<section class="destacados" data-fondo="papel" aria-labelledby="titulo-destacados">
@@ -63,7 +65,7 @@ const DESTACADOS = `<section class="destacados" data-fondo="papel" aria-labelled
       <div class="destacados__cabeza"><h2 id="titulo-destacados">Tres para empezar</h2><p>Los que más ganas tenemos de ver en casa. Todos cambian de color y de accesorio.</p></div>
       <div class="destacados__fila">
 ${destacados.map((slug) => porSlug[slug]).filter(Boolean).map((p) => `        <a class="destacado" href="flopi-${p.slug}.html">
-          <div class="destacado__marco" style="--fondo-tarjeta:var(--${p.fondo})"><img src="assets/img/flopi-${p.slug}.svg" alt="${esc(p.nombre)}, muñeco Flopi con ${esc(accesorios[p.accesorio].nombre.toLowerCase())}" width="560" height="660" loading="lazy" decoding="async"></div>
+          <div class="destacado__marco" style="--fondo-tarjeta:var(--${p.fondo})"><img src="assets/img/flopi-${p.slug}.svg" alt="${esc(p.nombre)}, figura Flopi con ${esc(accesorios[p.accesorio].nombre.toLowerCase())}" width="560" height="660" loading="lazy" decoding="async"></div>
           <div class="destacado__texto"><h3>${esc(p.nombre)}</h3><p>${esc(p.frase)}</p><span class="destacado__precio">${euros(p.precio)}</span></div>
         </a>`).join("\n")}
       </div>
@@ -79,7 +81,7 @@ ${productos.slice(0, 5).map((p, i) => `        <img class="pack__flopi" style="-
         <h2 id="titulo-pack">La pandilla completa</h2>
         <p>${esc(pack.descripcion)}</p>
         <p class="pack__precio">${precioPack}</p>
-        <a class="boton" href="munecos.html">Elegir sus colores</a>
+        <a class="boton" href="munecos.html#pandilla">Crear pandilla</a>
       </div>
       <div class="pack__escenario">
         <h3>${esc(pack.escenario.nombre)}</h3>
@@ -116,13 +118,13 @@ const faqLD = {
 const huevosHTML = (() => { try { return seccionHuevos(datos) || ""; } catch (e) { console.warn("huevos.mjs: seccionHuevos falló:", e.message); return ""; } })();
 const piezas = {
   "{{OFERTA}}": OFERTA, "{{DESTACADOS}}": DESTACADOS, "{{PANDILLA}}": productos.map((p, i) => tarjeta(p, datos, i)).join("\n"),
-  "{{HUEVOS}}": huevosHTML, "{{PACK}}": PACK, "{{DESCUENTOS}}": DESCUENTOS, "{{FAQ}}": FAQ,
+  "{{HUEVOS}}": huevosHTML, "{{EVENTOS}}": (() => { try { return seccionEventos(datos) || ""; } catch (e) { console.warn("eventos.mjs:", e.message); return ""; } })(), "{{PACK}}": PACK, "{{DESCUENTOS}}": DESCUENTOS, "{{FAQ}}": FAQ,
 };
 let inicio = await readFile(new URL("src/paginas/inicio.html", raiz), "utf8");
 for (const [k, v] of Object.entries(piezas)) inicio = inicio.replace(k, () => v);
 await registrar("index.html", pagina({
-  titulo: "Flopi, muñecos impresos en 3D a tu gusto",
-  descripcion: "Diseñamos e imprimimos en 3D un muñeco con los colores y el accesorio que elijas.",
+  titulo: "Flopi, animales articulados impresos en 3D",
+  descripcion: "Figuras articuladas de animales impresas en 3D en nuestro taller, en los colores que elijas.",
   cabezaExtra: `<script type="application/ld+json">${JSON.stringify(faqLD).replace(/</g, "\\u003c")}</script>`,
   cuerpo: inicio,
 }));
@@ -136,14 +138,23 @@ if (typeof paginaHuevos === "function") {
   }));
 }
 
+if (typeof paginaEventos === "function") {
+  await registrar("eventos.html", pagina({
+    titulo: "Comuniones y bodas Flopi",
+    descripcion: "Un mini Flopi para cada invitado: detalles para comuniones y bodas en los colores de tu evento.",
+    activo: "eventos",
+    cuerpo: paginaEventos(datos),
+  }));
+}
+
 // ---- Catálogo ----
 await registrar("munecos.html", pagina({
-  titulo: "Muñecos Flopi",
+  titulo: "Flopis",
   descripcion: "Conoce a la pandilla Flopi: cinco personajes que puedes personalizar con colores y accesorios.",
   activo: "munecos",
   cuerpo: `<section class="portada" data-fondo="papel">
   <div class="envoltorio">
-    <ol class="miga"><li><a href="index.html">Inicio</a></li><li>Muñecos</li></ol>
+    <ol class="miga"><li><a href="index.html">Inicio</a></li><li>Flopis</li></ol>
     <h1>La pandilla al completo</h1>
     <p>Elige un personaje y hazlo suyo: color del cuerpo, pelo y accesorio.</p>
   </div>
@@ -174,7 +185,7 @@ for (const p of productos) {
   };
   await registrar(`flopi-${p.slug}.html`, pagina({
     titulo: `Flopi ${p.nombre} personalizado`,
-    descripcion: `${p.frase} Muñeco impreso en 3D a tu gusto. ${euros(p.precio)} con IVA.`,
+    descripcion: `${p.frase} Figura articulada impresa en 3D. ${euros(p.precio)} con IVA.`,
     activo: "munecos",
     fondo: "papel",
     cabezaExtra: `<script type="application/ld+json">${JSON.stringify(jsonld)}</script>
@@ -194,7 +205,7 @@ for (const p of productos) {
     </div>
     <div class="ficha__panel">
       <div>
-        <ol class="miga"><li><a href="index.html">Inicio</a></li><li><a href="munecos.html">Muñecos</a></li><li>${esc(p.nombre)}</li></ol>
+        <ol class="miga"><li><a href="index.html">Inicio</a></li><li><a href="munecos.html">Flopis</a></li><li>${esc(p.nombre)}</li></ol>
         <h1>${esc(p.nombre)}</h1>
       </div>
       <p class="ficha__precio">${euros(p.precio)}<small>IVA incluido</small></p>
@@ -247,7 +258,7 @@ for (const p of productos) {
 // ---- Carrito ----
 await registrar("carrito.html", pagina({
   titulo: "Tu carrito Flopi",
-  descripcion: "Revisa los muñecos que has personalizado antes de pagar.",
+  descripcion: "Revisa las figuras que has elegido antes de pagar.",
   activo: "carrito",
   scripts: ["assets/js/pagina-carrito.js"],
   cuerpo: `<section class="portada" data-fondo="papel">
@@ -256,7 +267,7 @@ await registrar("carrito.html", pagina({
     <h1>Tu carrito</h1>
   </div>
 </section>
-<section class="carrito" data-fondo="papel" aria-label="Muñecos en el carrito">
+<section class="carrito" data-fondo="papel" aria-label="Figuras en el carrito">
   <div class="envoltorio">
     <div class="vacio" id="vacio">
       <img src="assets/img/flopi-perdido.svg" alt="" width="560" height="660">
@@ -267,12 +278,14 @@ await registrar("carrito.html", pagina({
     <aside class="resumen" id="resumen" hidden aria-label="Resumen del pedido">
       <dl>
         <dt>Subtotal</dt><dd id="subtotal">0,00 €</dd>
+        <dt id="desc-t" hidden>Descuento por cantidad</dt><dd id="desc" hidden></dd>
         <dt>Envío</dt><dd id="envio">Gratis</dd>
         <dt class="total">Total</dt><dd class="total" id="total">0,00 €</dd>
       </dl>
+      <small id="tramo"></small>
       <small id="falta"></small>
       <button type="button" class="boton" id="pagar">Ir a pagar</button>
-      <small>IVA incluido. Los productos personalizados no admiten desistimiento.</small>
+      <small>IVA incluido. Devoluciones: ver condiciones de envío.</small>
       <p id="aviso-pago" role="status" aria-live="polite"></p>
     </aside>
   </div>
@@ -293,7 +306,7 @@ ${cuerpo}
 }));
 
 await texto("seguridad.html", "seguridad", "Seguridad y materiales de Flopi", "Seguridad y materiales",
-  "Qué lleva cada muñeco, para qué edad es y cómo cuidarlo.", `
+  "Qué lleva cada figura, para qué edad es y cómo cuidarla.", `
 <h2>Edad recomendada</h2>
 <p>Flopi no es apto para menores de 3 años porque contiene piezas pequeñas que podrían desprenderse. Pendiente de decidir si se comercializa como juguete (con marcado CE y ensayos EN 71) o como figura decorativa.</p>
 <h2>Materiales</h2>
@@ -307,7 +320,7 @@ await texto("seguridad.html", "seguridad", "Seguridad y materiales de Flopi", "S
 await texto("envios.html", "envios", "Envíos y devoluciones de Flopi", "Envíos y devoluciones",
   "Cuánto tarda tu Flopi en llegar y qué pasa si algo sale mal.", `
 <h2>Plazos</h2>
-<p>Fabricamos cada muñeco bajo pedido en 5 días laborables. El envío a península tarda 48 h; a Baleares, Canarias, Ceuta y Melilla, de 4 a 7 días.</p>
+<p>Fabricamos cada figura bajo pedido en 5 días laborables. El envío a península tarda 48 h; a Baleares, Canarias, Ceuta y Melilla, de 4 a 7 días.</p>
 <h2>Precio del envío</h2>
 <p>4,90 € por pedido. Gratis a partir de 35 €.</p>
 <h2>Devoluciones</h2>

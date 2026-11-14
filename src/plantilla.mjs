@@ -5,8 +5,9 @@ export const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "
 const ICONO_CARRITO = `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2.2l2.3 11.2a1.6 1.6 0 0 0 1.6 1.3h8.6a1.6 1.6 0 0 0 1.6-1.2L21 8H6.2"/><circle cx="9.5" cy="20" r="1.3"/><circle cx="17.5" cy="20" r="1.3"/></svg>`;
 
 const MENU = [
-  ["munecos.html", "Muñecos", "munecos"],
-  ["index.html#huevos", "Huevos sorpresa", "huevos"],
+  ["munecos.html", "Flopis", "munecos"],
+  ["huevos.html", "Huevos sorpresa", "huevos"],
+  ["eventos.html", "Comuniones y bodas", "eventos"],
   ["seguridad.html", "Seguridad", "seguridad"],
   ["envios.html", "Envíos", "envios"],
 ];
@@ -27,8 +28,8 @@ export function logoSVG({ clase = "logo", id = "logo" } = {}) {
     `<text x="${x}" y="${112 + dy}" transform="rotate(${r} ${x + 26} ${70 + dy})"${color ? ` fill="${c}"` : ""} ${atributos}>${l}</text>`).join("");
   const fuente = 'font-family="Fredoka Flopi, Fredoka, Arial Rounded MT Bold, sans-serif" font-weight="700" font-size="112" stroke-linejoin="round" paint-order="stroke"';
   const trazo = (d) => `<path d="${d}" fill="none" stroke="#0E2F6B" stroke-width="13" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#FFD400" stroke-width="7" stroke-linecap="round"/>`;
-  return `<svg class="${clase}" viewBox="0 0 340 150" role="img" aria-labelledby="${id}-t"><title id="${id}-t">Flopi</title>
-  ${trazo("M14 46 L2 36")}${trazo("M10 72 L-2 72")}${trazo("M16 98 L4 108")}
+  return `<svg class="${clase}" viewBox="-30 0 378 150" role="img" aria-labelledby="${id}-t"><title id="${id}-t">Flopi</title>
+  ${trazo("M-8 40 L-20 30")}${trazo("M-12 66 L-24 66")}${trazo("M-6 92 L-18 102")}
   ${trazo("M326 40 L338 30")}${trazo("M330 66 L342 66")}${trazo("M324 92 L336 102")}
   <g ${fuente}>
     <g fill="#FFD400" stroke="#FFD400" stroke-width="34">${capa("")}</g>
@@ -63,16 +64,18 @@ export function pagina({ titulo, descripcion, activo = "", fondo = "papel", cuer
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Lilita+One&family=Nunito:wght@400;600;800&display=swap">
 <link rel="stylesheet" href="assets/css/flopi.css">
 <link rel="stylesheet" href="assets/css/huevos.css">
+<link rel="stylesheet" href="assets/css/eventos.css">
 <script>try{var p=localStorage.getItem("flopi-paleta");if(p)document.documentElement.dataset.paleta=p}catch(e){}</script>
 ${cabezaExtra}
 </head>
 <body data-fondo="${fondo}">
 <a class="saltar" href="#contenido">Saltar al contenido</a>
-<div class="anuncio"><div class="envoltorio"><p>Nuevos huevos sorpresa: ¿quién saldrá del tuyo? <a href="index.html#huevos">Descubrirlos</a></p></div></div>
+<div class="anuncio"><div class="envoltorio"><p>Nuevos huevos sorpresa: ¿quién saldrá del tuyo? <a href="huevos.html">Descubrirlos</a></p></div></div>
 ${sinCabecera ? "" : `<header class="cabecera">
   <div class="envoltorio">
     <a class="marca" href="index.html" aria-label="Flopi, inicio">${logoSVG({ id: "logo-cab" })}</a>
-    <nav aria-label="Principal"><ul class="menu">${menu}</ul></nav>
+    <button type="button" class="menu-boton" aria-expanded="false" aria-controls="menu-principal"><span class="menu-boton__icono" aria-hidden="true"></span>Menú</button>
+    <nav aria-label="Principal" id="menu-principal"><ul class="menu">${menu}</ul></nav>
     <a class="carrito-enlace" href="carrito.html"${activo === "carrito" ? ' aria-current="page"' : ""}>${ICONO_CARRITO}<span class="txt">Carrito</span><span class="carrito-cuenta" data-carrito-cuenta data-vacio="true">0</span></a>
     <a class="boton" href="munecos.html">Crea tu Flopi</a>
   </div>
@@ -86,8 +89,9 @@ ${cuerpo}
     <p class="pie__redes">Síguenos en Instagram y TikTok: <strong>@flopi.toys</strong></p>
     <div class="pie__fila">
       <ul>
-        <li><a href="munecos.html">Muñecos</a></li>
-        <li><a href="index.html#huevos">Huevos sorpresa</a></li>
+        <li><a href="munecos.html">Flopis</a></li>
+        <li><a href="huevos.html">Huevos sorpresa</a></li>
+        <li><a href="eventos.html">Comuniones y bodas</a></li>
         <li><a href="seguridad.html">Seguridad y materiales</a></li>
         <li><a href="envios.html">Envíos y devoluciones</a></li>
         <li><a href="aviso-legal.html">Aviso legal</a></li>
@@ -110,6 +114,7 @@ ${cuerpo}
 <script src="assets/js/carrito.js" defer></script>
 <script src="assets/js/flopi.js" defer></script>
 <script src="assets/js/huevos.js" defer></script>
+<script src="assets/js/eventos.js" defer></script>
 ${scripts.map((s) => `<script src="${s}" defer></script>`).join("\n")}
 </body>
 </html>
@@ -117,11 +122,14 @@ ${scripts.map((s) => `<script src="${s}" defer></script>`).join("\n")}
 }
 
 export function tarjeta(p, datos, i = 0) {
-  return `<a class="tarjeta" href="flopi-${p.slug}.html" data-profundidad="${[0.06, -0.08, 0.12, -0.04, 0.1][i % 5]}">
+  return `<a class="tarjeta" href="flopi-${p.slug}.html">
   <div class="tarjeta__marco" style="--fondo-tarjeta:var(--${p.fondo})">
-    <img src="assets/img/flopi-${p.slug}.svg" alt="${esc(p.nombre)}, muñeco Flopi ${datos.colores[p.cuerpo].nombre.toLowerCase()} con ${datos.accesorios[p.accesorio].nombre.toLowerCase()}" width="560" height="660" loading="lazy" decoding="async" style="view-transition-name:flopi-${p.slug}">
+    <img src="assets/img/flopi-${p.slug}.svg" alt="${esc(p.nombre)}, figura Flopi ${datos.colores[p.cuerpo].nombre.toLowerCase()} con ${datos.accesorios[p.accesorio].nombre.toLowerCase()}" width="560" height="660" loading="lazy" decoding="async" style="view-transition-name:flopi-${p.slug}">
   </div>
-  <div class="tarjeta__pie"><span class="tarjeta__nombre">${esc(p.nombre)}</span><span class="tarjeta__precio">${euros(p.precio)}</span></div>
-  <span class="tarjeta__subtitulo">${esc(p.subtitulo)}</span>
+  <div class="tarjeta__info">
+    <span class="tarjeta__nombre">${esc(p.nombre)}</span>
+    <span class="tarjeta__subtitulo">${esc(p.subtitulo)}</span>
+    <div class="tarjeta__compra"><span class="tarjeta__precio">${euros(p.precio)}</span><span class="tarjeta__cta" aria-hidden="true">Ver</span></div>
+  </div>
 </a>`;
 }
