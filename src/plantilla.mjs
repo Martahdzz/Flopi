@@ -77,7 +77,7 @@ ${sinCabecera ? "" : `<header class="cabecera">
     <button type="button" class="menu-boton" aria-expanded="false" aria-controls="menu-principal"><span class="menu-boton__icono" aria-hidden="true"></span>Menú</button>
     <nav aria-label="Principal" id="menu-principal"><ul class="menu">${menu}</ul></nav>
     <a class="carrito-enlace" href="carrito.html"${activo === "carrito" ? ' aria-current="page"' : ""}>${ICONO_CARRITO}<span class="txt">Carrito</span><span class="carrito-cuenta" data-carrito-cuenta data-vacio="true">0</span></a>
-    <a class="boton" href="munecos.html">Crea tu Flopi</a>
+    <a class="boton" href="munecos.html">Elige tu Flopi</a>
   </div>
 </header>`}
 <main id="contenido">
@@ -86,7 +86,9 @@ ${cuerpo}
 <footer class="pie" data-fondo="cielo">
   <div class="envoltorio">
     <div class="pie__marca" aria-hidden="true">${logoSVG({ clase: "logo logo--grande", id: "logo-pie" })}</div>
-    <p class="pie__redes">Síguenos en Instagram y TikTok: <strong>@flopi.toys</strong></p>
+    <p class="pie__redes"><span>Síguenos</span>
+      <a class="red" href="https://www.instagram.com/flopi.toys" rel="noopener" aria-label="Instagram de Flopi"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.3" cy="6.7" r="1.3" fill="currentColor"/></svg>flopi.toys</a>
+      <a class="red" href="https://www.tiktok.com/@flopi.toys" rel="noopener" aria-label="TikTok de Flopi"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 3h3c.3 2.2 1.7 3.7 4 4v3c-1.6 0-3-.5-4-1.3V15a6 6 0 1 1-6-6v3.2A2.8 2.8 0 1 0 14 15Z" fill="currentColor"/></svg>flopi.toys</a></p>
     <div class="pie__fila">
       <ul>
         <li><a href="munecos.html">Flopis</a></li>

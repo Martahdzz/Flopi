@@ -62,11 +62,8 @@ const OFERTA = `<div class="oferta hero__cta">
 const DESTACADOS = `<section class="destacados" data-fondo="papel" aria-labelledby="titulo-destacados">
     <div class="envoltorio">
       <div class="destacados__cabeza"><h2 id="titulo-destacados">Tres para empezar</h2><p>Los más populares entre los niños. Todos cambian de color y de accesorio.</p></div>
-      <div class="destacados__fila">
-${destacados.map((slug) => porSlug[slug]).filter(Boolean).map((p) => `        <a class="destacado" href="flopi-${p.slug}.html">
-          <div class="destacado__marco" style="--fondo-tarjeta:var(--${p.fondo})"><img src="assets/img/flopi-${p.slug}.svg" alt="${esc(p.nombre)}, figura Flopi con ${esc(accesorios[p.accesorio].nombre.toLowerCase())}" width="560" height="660" loading="lazy" decoding="async"></div>
-          <div class="destacado__texto"><h3>${esc(p.nombre)}</h3><p>${esc(p.frase)}</p><span class="destacado__precio">${euros(p.precio)}</span></div>
-        </a>`).join("\n")}
+      <div class="destacados__fila rejilla">
+${destacados.map((slug) => porSlug[slug]).filter(Boolean).map((p, i) => tarjeta(p, datos, i)).join("\n")}
       </div>
     </div>
   </section>`;
